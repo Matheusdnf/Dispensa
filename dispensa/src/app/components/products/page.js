@@ -1,6 +1,5 @@
 "use client";
 import card from "@/app/style/card.module.css";
-import error from "@/app/style/message_null.module.css";
 import { useState } from "react";
 const products = [
   {
