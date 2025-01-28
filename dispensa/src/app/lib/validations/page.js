@@ -24,3 +24,28 @@ export const validatePassword = (password) => {
 export const handleChange = (e, setAlgo) => {
   setAlgo(e.target.value);
 };
+
+export const validate_name = (name) => {
+  const maxLength = 30;
+  const minLength = 3;
+
+  if (name.length < minLength || name.length > maxLength) {
+    return false;
+  }
+  return true;
+};
+
+export const validate_Date = (date) => {
+  const [day, month, year] = date.split("/");
+
+  if (parseInt(month) > 12 || parseInt(month) < 1) {
+    return false;
+  }
+
+  const daysInMonth = new Date(year, month, 0).getDate();
+  if (parseInt(day) > daysInMonth) {
+    return false;
+  }
+
+  return true;
+};
