@@ -105,7 +105,7 @@ export function Form({ email, setEmail, password, setPassword }) {
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center mt-3">
-              <a href="#">Esqueci minha senha</a>
+              <a href="register">Não possui uma conta? Registre-se.</a>
               <button className="btn btn-primary mt-3" type="submit">
                 Entrar
               </button>

@@ -1,6 +1,6 @@
 "use client"
 import { Navbar } from "@/app/components/navbar";
-import { Form } from "@/app/components/form";
+import { Form } from "@/app/components/loginForm";
 import { useState } from "react";
 import { Footer } from "@/app/components/footer";
 
