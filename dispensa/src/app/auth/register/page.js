@@ -1,8 +1,8 @@
 "use client";
 import { Navbar } from "@/app/components/navbar";
 import { RegisterForm } from "@/app/components/registerForm";
-import { useState } from "react";
 import { Footer } from "@/app/components/footer";
+import { useState } from "react";
 
 export default function Register() {
   const [email, setEmail] = useState("");

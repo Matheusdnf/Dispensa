@@ -1,6 +1,6 @@
 "use client"
 import { Navbar } from "@/app/components/navbar";
-import { Form } from "@/app/components/loginForm";
+import { LoginForm } from "@/app/components/loginForm";
 import { useState } from "react";
 import { Footer } from "@/app/components/footer";
 
@@ -21,7 +21,7 @@ export default function Login() {
         </div>
         <div className="col-12 col-lg-6 d-flex flex-column justify-content-center p-4">
           <Navbar />
-          <Form
+          <LoginForm
             email={email}
             setEmail={setEmail}
             password={password}

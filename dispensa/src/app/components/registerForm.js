@@ -5,7 +5,7 @@ import {
   handleChange,
 } from "@/app/lib/validations/page";
 import { useState } from "react";
-
+import { signupUser } from "../lib/supabase/signupUser";
 export function RegisterForm({
   email,
   setEmail,
@@ -26,7 +26,7 @@ export function RegisterForm({
     setHidePassword(!hidePassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let hasError = false;
@@ -62,11 +62,12 @@ export function RegisterForm({
     }
 
     if (!hasError) {
-      console.log("Cadastro realizado com sucesso!", {
-        email,
-        username,
-        password,
-      });
+      const response = await signupUser(email, password, username);
+      if (response.error) {
+        console.log("Erro no registro. ", response.error);
+      } else {
+        console.log("Registro realizado com sucesso!", response.data);
+      }
     }
   };
 
