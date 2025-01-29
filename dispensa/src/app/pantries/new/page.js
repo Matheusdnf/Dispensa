@@ -3,7 +3,7 @@ import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
 
-export function Form_produto({
+export default function pantryForm({
   Name,
   setName,
   Description,
@@ -74,7 +74,7 @@ export function Form_produto({
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
-        <h1>Cadastrar Dispensa</h1>
+        <h1>Cadastrar Despensa</h1>
         <div className="d-flex flex-wrap justify-content-between">
           <div className="col-12 col-md-5 mb-3">
             <div className="input-group mb-3">
@@ -145,25 +145,6 @@ export function Form_produto({
           </button>
         </div>
       </form>
-    </div>
-  );
-}
-
-export default function Login() {
-  const [Name, setName] = useState("");
-  const [Description, setDescription] = useState("");
-
-  const [image, setImage] = useState(null);
-  return (
-    <div className="col-12 col-lg-6 d-flex flex-column justify-content-center p-4">
-      <Form_produto
-        Name={Name}
-        setName={setName}
-        Description={Description}
-        setDescription={setDescription}
-        image={image}
-        setImage={setImage}
-      />
     </div>
   );
 }
