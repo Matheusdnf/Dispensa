@@ -1,6 +1,7 @@
 "use client";
 import { ShowCard } from "@/app/components/showCard";
-
+import { Nav_bar_itens } from "../components/navbar";
+import { Dropdown_Pentries, Dropdown_Products } from "../components/dropdown";
 const products = [
   {
     name: "Produto 1",
@@ -41,29 +42,11 @@ const products = [
 export default function scream_pantry() {
   return (
     <div>
-      <Nav_bar_Pantry />
+      <Nav_bar_itens
+        name_nav_bar={"Sessão de Dispensas"}
+        Dropdown={<Dropdown_Pentries />}
+      />
       <ShowCard itens={products} />
-    </div>
-  );
-}
-
-export function Nav_bar_Pantry() {
-  return (
-    <div>
-      <nav className="p-4 navbar  navbar-light bg-light">
-        <h4 className="size-11">Seção de despensas</h4>
-        <form className="form-inline d-flex">
-          <input
-            className="form-control mr-2"
-            type="search"
-            placeholder="Pesquisar"
-            aria-label="Pesquisar"
-          />
-          <button className="btn btn-outline-success" type="submit">
-            Pesquisar
-          </button>
-        </form>
-      </nav>
     </div>
   );
 }
