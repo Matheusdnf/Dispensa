@@ -40,7 +40,7 @@ export function Dropdown_Products() {
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        Ações Dispensa
+        Ações Do Produto
       </button>
       <ul className="dropdown-menu">
         <li>
