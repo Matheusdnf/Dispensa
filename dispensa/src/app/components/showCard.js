@@ -1,7 +1,7 @@
 import card from "@/app/style/card.module.css";
 import { useState } from "react";
 
-export function Show_Card({ itens }) {
+export function ShowCard({ itens }) {
   //Manipuladores de Evento
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [imgSrc, setImgSrc] = useState("");
