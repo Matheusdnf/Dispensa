@@ -1,14 +1,13 @@
 "use client";
-import { handleChange, validate_Date } from "@/app/lib/validations/page";
+import { handleChange } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
 
-export default function pantryForm({
+export function PantryForm({
   Name,
   setName,
   Description,
   setDescription,
-
   image,
   setImage,
 }) {
@@ -145,6 +144,24 @@ export default function pantryForm({
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+export default function Login_Pantries() {
+  const [Name, setName] = useState("");
+  const [Description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
+  return (
+    <div>
+      <PantryForm
+        Name={Name}
+        setName={setName}
+        Description={Description}
+        setDescription={setDescription}
+        image={image}
+        setImage={setImage}
+      />
     </div>
   );
 }

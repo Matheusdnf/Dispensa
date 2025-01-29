@@ -3,7 +3,7 @@ import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
 
-export default function productForm({
+export function ProductForm({
   Name,
   setName,
   Description,
@@ -116,6 +116,25 @@ export default function productForm({
           </div>
         </div>
       </form>
+    </div>
+  );
+}
+
+export default function Login_Products() {
+  const [Name, setName] = useState("");
+  const [Description, setDescription] = useState("");
+  const [Validate, setValidate] = useState("");
+
+  return (
+    <div>
+      <ProductForm
+        Name={Name}
+        setName={setName}
+        Description={Description}
+        setDescription={setDescription}
+        Validate={Validate}
+        setValidate={setValidate}
+      />
     </div>
   );
 }
