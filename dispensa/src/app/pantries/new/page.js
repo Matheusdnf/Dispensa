@@ -66,7 +66,6 @@ export function Form_produto({
       console.log("Formulário enviado com sucesso!", {
         Name,
         Description,
-        Validate,
         image,
       });
     }
