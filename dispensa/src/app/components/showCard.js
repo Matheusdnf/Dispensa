@@ -1,5 +1,6 @@
 import card from "@/app/style/card.module.css";
 import { useState } from "react";
+import { Not_information } from "./not_information";
 
 export function ShowCard({ itens }) {
   //Manipuladores de Evento
@@ -18,14 +19,7 @@ export function ShowCard({ itens }) {
     setHoveredIndex(null);
   };
   if (itens.length === 0) {
-    return (
-      <div
-        className="d-grid justify-items-center align-items-center"
-        style={{ height: "100vh" }}
-      >
-        <h1 className="text-center mb-32">Nada ainda</h1>
-      </div>
-    );
+    return <Not_information menssage={"Nenhum Dado Cadastrado"} />;
   }
   return (
     <div className="d-flex flex-wrap justify-content-around">
@@ -55,7 +49,7 @@ export function ShowCard({ itens }) {
             <p className="card-text m-1">{p.description}</p>
             {p.validate && <p className="card-text">Validade: {p.validate}</p>}
             <a href="#" className="btn btn-primary">
-              Saiba mais
+              Ver Detalhes
             </a>
           </div>
         </div>
