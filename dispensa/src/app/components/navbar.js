@@ -22,3 +22,27 @@ export function Navbar() {
     </nav>
   );
 }
+
+export function Nav_bar_itens({ name_nav_bar, Dropdown }) {
+  return (
+    <div>
+      <nav className="shadow-sm p-4 navbar navbar-light bg-light d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center">
+          <h4 className="size-11 me-3">{name_nav_bar}</h4>
+          {Dropdown}
+        </div>
+        <form className="d-flex">
+          <input
+            className="form-control me-2"
+            type="search"
+            placeholder="Pesquisar"
+            aria-label="Pesquisar"
+          />
+          <button className="btn btn-outline-success" type="submit">
+            Pesquisar
+          </button>
+        </form>
+      </nav>
+    </div>
+  );
+}
