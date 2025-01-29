@@ -2,6 +2,8 @@
 import { handleChange } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
+import { useAuth } from "@/app/lib/auth";
+import { createPantry } from "@/app/lib/pantries";
 
 export function PantryForm({
   Name,
@@ -11,9 +13,9 @@ export function PantryForm({
   image,
   setImage,
 }) {
+  const { user } = useAuth();
   const [NameError, setNameError] = useState("");
   const [DescriptionError, setDescriptionError] = useState("");
-
   const [imagePreview, setImagePreview] = useState(null);
 
   const handleFileChange = (e) => {
@@ -30,7 +32,7 @@ export function PantryForm({
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let hasError = false;
@@ -62,6 +64,12 @@ export function PantryForm({
     }
 
     if (!hasError) {
+      const result = await createPantry(Name, Description, image, user.id)
+      
+      if(result.error) {
+        console.log("Erro no envio ao banco", result.error)
+      }
+
       console.log("Formulário enviado com sucesso!", {
         Name,
         Description,
