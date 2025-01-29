@@ -5,7 +5,8 @@ import {
   handleChange,
 } from "@/app/lib/validations/page";
 import { useState } from "react";
-import { signinUser } from "@/app/lib/supabase/signinUser"
+import { signinUser } from "@/app/lib/supabase/signinUser";
+import Link from "next/link";
 
 export function LoginForm({ email, setEmail, password, setPassword }) {
   const [emailError, setEmailError] = useState("");
@@ -45,7 +46,7 @@ export function LoginForm({ email, setEmail, password, setPassword }) {
     }
 
     if (!hasError) {
-      const response = await signinUser(email, password)
+      const response = await signinUser(email, password);
       if (response.error) {
         console.log("Erro no login", response.error);
       } else {
@@ -111,7 +112,9 @@ export function LoginForm({ email, setEmail, password, setPassword }) {
             </div>
           </div>
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <a href="register">Não possui uma conta? Registre-se.</a>
+            <Link href="../auth/register">
+              Não possui uma conta? Registre-se.
+            </Link>
             <button className="btn btn-primary mt-3" type="submit">
               Entrar
             </button>

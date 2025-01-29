@@ -1,11 +1,14 @@
 "use client";
+
 import {
   validateEmail,
   validatePassword,
   handleChange,
+  validate_name,
 } from "@/app/lib/validations/page";
 import { useState } from "react";
 import { signupUser } from "../lib/supabase/signupUser";
+import Link from "next/link";
 export function RegisterForm({
   email,
   setEmail,
@@ -37,6 +40,19 @@ export function RegisterForm({
     } else {
       setEmailError("");
     }
+    if (!validate_name(username)) {
+      setUsernameError(
+        <div>
+          <ul>
+            <li>Ter No mínimo 3 e no máximo 30 letra</li>
+            <li>Não pode Incluir caracteres especiais [!@#$%^&*]</li>
+          </ul>
+        </div>
+      );
+      hasError = true;
+    } else {
+      setUsernameError("");
+    }
 
     if (!validatePassword(password)) {
       setPasswordError(
@@ -46,6 +62,7 @@ export function RegisterForm({
             <li>Incluir um número [1,2,3]</li>
             <li>Incluir caracteres especiais [!@#$%^&*]</li>
             <li>Incluir uma letra</li>
+            <li>Ter letra Maiúscula</li>
           </ul>
         </div>
       );
@@ -152,7 +169,7 @@ export function RegisterForm({
           </div>
 
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <a href="login">Já tem uma conta? Entrar</a>
+            <Link href="../auth/login">Já tem uma conta? Entrar</Link>
             <button className="btn btn-primary mt-3" type="submit">
               Cadastrar
             </button>
