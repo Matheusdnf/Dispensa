@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 
+//elaborar uma tela sobre
 export default function Home() {
   return (
     <div>

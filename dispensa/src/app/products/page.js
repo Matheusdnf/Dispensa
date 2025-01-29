@@ -54,7 +54,7 @@ export default function Page_products() {
         name_nav_bar={"Sessão de Produtos"}
         Dropdown={<Dropdown_Products />}
       />
-      <ShowCard itens={products} />
+      <ShowCard itens={products} ismodal={true} />
     </div>
   );
 }

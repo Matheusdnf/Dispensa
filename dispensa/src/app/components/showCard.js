@@ -1,8 +1,9 @@
 import card from "@/app/style/card.module.css";
 import { useState } from "react";
 import { Not_information } from "./not_information";
-
-export function ShowCard({ itens }) {
+import Link from "next/link";
+import { Modal_function } from "./modal";
+export function ShowCard({ itens, ismodal }) {
   //Manipuladores de Evento
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [imgSrc, setImgSrc] = useState("");
@@ -48,9 +49,14 @@ export function ShowCard({ itens }) {
             <h5 className="card-title">{p.name}</h5>
             <p className="card-text m-1">{p.description}</p>
             {p.validate && <p className="card-text">Validade: {p.validate}</p>}
-            <a href="#" className="btn btn-primary">
-              Ver Detalhes
-            </a>
+            {/* Rota que irá levar para os produtos específicos */}
+            {ismodal ? (
+              <Modal_function />
+            ) : (
+              <Link className="btn btn-primary" href={"/products"}>
+                Saber mais Informação
+              </Link>
+            )}
           </div>
         </div>
       ))}
