@@ -1,8 +1,7 @@
-"use client"
+"use client";
 import { Navbar } from "@/app/components/navbar";
 import { LoginForm } from "@/app/components/loginForm";
 import { useState } from "react";
-import { Footer } from "@/app/components/footer";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,11 +10,11 @@ export default function Login() {
   return (
     <div className="d-flex flex-column min-vh-100">
       <div className="d-flex flex-row flex-fill">
-        <div className="col-12 col-lg-6 p-0">
+        <div className="col-12 col-lg-6 ">
           <img
-            src="/img/invalid.jpg"
+            src="/img/dispensa.jpg"
             width="100%"
-            height="100%"
+            height="75%"
             style={{ objectFit: "cover" }}
           />
         </div>
@@ -29,8 +28,6 @@ export default function Login() {
           />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
-

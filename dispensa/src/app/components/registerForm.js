@@ -35,7 +35,13 @@ export function RegisterForm({
     let hasError = false;
 
     if (!validateEmail(email)) {
-      setEmailError("Email inválido");
+      setEmailError(
+        <div>
+          <ul>
+            <li>Email inválido</li>
+          </ul>
+        </div>
+      );
       hasError = true;
     } else {
       setEmailError("");
@@ -72,7 +78,13 @@ export function RegisterForm({
     }
 
     if (password !== confirmPassword) {
-      setConfirmPasswordError("As senhas não correspondem.");
+      setConfirmPasswordError(
+        <div>
+          <ul>
+            <li>As senhas Não Correspondem!</li>
+          </ul>
+        </div>
+      );
       hasError = true;
     } else {
       setConfirmPasswordError("");
@@ -117,7 +129,7 @@ export function RegisterForm({
             )}
           </div>
 
-          <div className="input-group mb-3">
+          <div className="d-flex mb-3">
             <input
               type={hidePassword ? "text" : "password"}
               className="form-control w-100"
@@ -129,6 +141,8 @@ export function RegisterForm({
               type="button"
               onClick={togglePasswordVisibility}
               style={{
+                border: "none",
+                borderRadius: "5px",
                 marginLeft: "8px",
                 padding: "6px 12px",
                 cursor: "pointer",
@@ -150,11 +164,8 @@ export function RegisterForm({
                 />
               )}
             </button>
-            {passwordError && (
-              <div className="text-danger">{passwordError}</div>
-            )}
           </div>
-
+          {passwordError && <div className="text-danger">{passwordError}</div>}
           <div className="input-group mb-3">
             <input
               type={hidePassword ? "text" : "password"}

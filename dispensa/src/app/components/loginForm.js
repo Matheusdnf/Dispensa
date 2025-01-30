@@ -23,7 +23,13 @@ export function LoginForm({ email, setEmail, password, setPassword }) {
     let hasError = false;
 
     if (!validateEmail(email)) {
-      setEmailError("Email inválido");
+      setEmailError(
+        <div>
+          <ul>
+            <li>Email inválido</li>
+          </ul>
+        </div>
+      );
       hasError = true;
     } else {
       setEmailError("");
@@ -71,7 +77,7 @@ export function LoginForm({ email, setEmail, password, setPassword }) {
             {emailError && <div className="text-danger">{emailError}</div>}
           </div>
 
-          <div className="input-group mb-3">
+          <div className="d-flex">
             <input
               type={hidepassword ? "text" : "password"}
               className="form-control w-100"
@@ -84,6 +90,8 @@ export function LoginForm({ email, setEmail, password, setPassword }) {
               type="button"
               onClick={secretPassword}
               style={{
+                border: "none",
+                borderRadius: "5px",
                 marginLeft: "8px",
                 padding: "6px 12px",
                 cursor: "pointer",
@@ -105,11 +113,11 @@ export function LoginForm({ email, setEmail, password, setPassword }) {
                 />
               )}
             </button>
-            <div>
-              {passwordError && (
-                <div className="text-danger">{passwordError}</div>
-              )}
-            </div>
+          </div>
+          <div>
+            {passwordError && (
+              <div className="text-danger">{passwordError}</div>
+            )}
           </div>
           <div className="d-flex justify-content-between align-items-center mt-3">
             <Link href="../auth/register">

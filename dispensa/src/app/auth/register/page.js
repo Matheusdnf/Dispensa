@@ -1,7 +1,6 @@
 "use client";
 import { Navbar } from "@/app/components/navbar";
 import { RegisterForm } from "@/app/components/registerForm";
-import { Footer } from "@/app/components/footer";
 import { useState } from "react";
 
 export default function Register() {
@@ -15,9 +14,9 @@ export default function Register() {
       <div className="d-flex flex-row flex-fill">
         <div className="col-12 col-lg-6 p-0">
           <img
-            src="/img/invalid.jpg" 
+            src="/img/dispensa.jpg"
             width="100%"
-            height="100%"
+            height="75%"
             style={{ objectFit: "cover" }}
           />
         </div>
@@ -35,7 +34,6 @@ export default function Register() {
           />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
