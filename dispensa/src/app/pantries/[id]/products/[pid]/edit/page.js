@@ -1,9 +1,10 @@
 "use client";
 import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
-import { useState } from "react";
-import { createProduct } from "@/app/lib/products";
-import { useRouter, useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/app/lib/supabase/SupabaseClient";
+import { editProduct } from "@/app/lib/products"; // Importar função de edição de produto
 
 export function ProductForm({
   Name,
@@ -12,32 +13,28 @@ export function ProductForm({
   setDescription,
   Validate,
   setValidate,
-  image,
-  setImage,
-  Quantity,
-  setQuantity,
+  productId, // Recebe o ID do produto como prop
 }) {
   const [NameError, setNameError] = useState("");
   const [DescriptionError, setDescriptionError] = useState("");
   const [ValidateError, setValidateError] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
   const [successmensage, setsuccessmensage] = useState("");
+  const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
   const router = useRouter();
-  const { id: pantryId } = useParams();
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
+  // Função para obter o ID do usuário logado
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+      }
+    };
 
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
-  };
+    fetchUser();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,42 +80,39 @@ export function ProductForm({
       setValidateError("");
     }
 
-    if (!hasError) {
-      const response = await createProduct(
-        Name,
-        Description,
-        image,
-        Quantity,
-        pantryId,
-        Validate,
-        null
-      );
+    if (!hasError && userId) {
+      try {
+        // Chama a função de edição de produto
+        const { data, error } = await editProduct(
+          productId, // ID do produto
+          Name,
+          Description,
+          Validate, // Data de validade
+          userId
+        );
 
-      if (response.error) {
-        console.log("Erro ao cadastrar produto", response.error);
-      } else {
-        console.log("Produto cadastrado com sucesso");
+        if (error) {
+          console.error("Erro ao editar produto:", error);
+          setsuccessmensage("Erro ao editar produto. Tente novamente.");
+        } else {
+          console.log("Produto atualizado com sucesso:", data);
+          setsuccessmensage("Edição Realizada com Sucesso!");
+          setTimeout(() => {
+            setsuccessmensage("");
+            router.push("/products"); // Redireciona para a lista de produtos
+          }, 2000);
+        }
+      } catch (error) {
+        console.error("Erro ao editar produto:", error.message);
+        setsuccessmensage("Erro ao editar produto. Tente novamente.");
       }
-
-      console.log("Formulário enviado com sucesso!", {
-        Name,
-        Description,
-        Validate,
-        image,
-        Quantity,
-      });
-      setsuccessmensage("Cadastro Realizado com Sucesso!");
-      setTimeout(() => {
-        setsuccessmensage("");
-        router.push("/products");
-      }, 2000);
     }
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
-        <h1>Cadastrar Produto</h1>
+        <h1>Editar Produto</h1>
         <div>
           <div className="input-group mb-3">
             <input
@@ -142,44 +136,7 @@ export function ProductForm({
               <div className="text-danger">{DescriptionError}</div>
             )}
           </div>
-          <div className="input-group mb-3">
-            <input
-              type="number"
-              className="form-control w-100"
-              placeholder="Quantidade"
-              onChange={(e) => handleChange(e, setQuantity)}
-              value={Quantity}
-            />
-          </div>
-          <div className="col-md-5">
-            <label htmlFor="imageUpload" className="form-label">
-              Imagem:
-            </label>
-            <input
-              type="file"
-              id="imageUpload"
-              name="image"
-              accept="image/*"
-              className="form-control"
-              onChange={handleFileChange}
-            />
 
-            {imagePreview && (
-              <div className="d-flex justify-content-center mt-3">
-                <img
-                  src={imagePreview}
-                  alt="Imagem selecionada"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                  className="img-fluid"
-                />
-              </div>
-            )}
-          </div>
           <div className="input-group mb-3">
             <input
               type="Date"
@@ -188,35 +145,33 @@ export function ProductForm({
               onChange={(e) => handleChange(e, setValidate)}
               value={Validate}
             />
-            <div>
-              {ValidateError && (
-                <div className="text-danger">{ValidateError}</div>
-              )}
-            </div>
+            {ValidateError && (
+              <div className="text-danger">{ValidateError}</div>
+            )}
           </div>
+
           <div className="d-flex justify-content-center align-items-center mt-3">
-            <button className="btn  btn-primary mt-3" type="submit">
-              Cadastrar
+            <button className="btn btn-primary mt-3" type="submit">
+              Editar
             </button>
           </div>
+          {successmensage && (
+            <div className="alert alert-success mt-3">{successmensage}</div>
+          )}
         </div>
-        {successmensage && (
-          <div className="alert alert-success mt-3">{successmensage}</div>
-        )}
       </form>
     </div>
   );
 }
 
-export default function Login_Products() {
+export default function EditProductPage({ params }) {
   const [Name, setName] = useState("");
   const [Description, setDescription] = useState("");
   const [Validate, setValidate] = useState("");
-  const [image, setImage] = useState(null);
-  const [Quantity, setQuantity] = useState("");
+  const productId = params.pid; // Captura o ID do produto da URL
 
   return (
-    <div>
+    <div className="d-flex justify-content-center align-items-center vh-100">
       <ProductForm
         Name={Name}
         setName={setName}
@@ -224,10 +179,7 @@ export default function Login_Products() {
         setDescription={setDescription}
         Validate={Validate}
         setValidate={setValidate}
-        image={image}
-        setImage={setImage}
-        Quantity={Quantity}
-        setQuantity={setQuantity}
+        productId={productId} // Passa o ID do produto como prop
       />
     </div>
   );
