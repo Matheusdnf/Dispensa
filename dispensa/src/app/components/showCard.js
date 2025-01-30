@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Modal_function, Modal_function_pratries } from "./modal";
 
 export function ShowCard({ itens, ismodal, button_pantries }) {
-  // Manipuladores de Evento
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [imgSrc, setImgSrc] = useState("/img/invalid.jpg"); // Definir a imagem padrão diretamente
 
@@ -48,18 +47,21 @@ export function ShowCard({ itens, ismodal, button_pantries }) {
             <p className="card-text m-1">{p.description}</p>
             {p.validate && <p className="card-text">Validade: {p.validate}</p>}
             {ismodal ? (
-              <Modal_function pantryId={p.id} productId={p.productId} />
+              <Modal_function pantryId={p.pantry_id} productId={p.id} />
             ) : (
               <Link
                 className="btn btn-primary"
-                href={`/pantries/${p.id}/products`}
+                href={`/pantries/${p.pantry_id}/products/${p.id}`}
               >
                 Saber mais Informação
               </Link>
             )}
             {button_pantries && (
               <div className="pt-2">
-                <Modal_function_pratries pantryId={p.id} />
+                <Modal_function_pratries
+                  pantryId={p.id}
+                  productId={p.id} // Aqui também usamos p.id
+                />
               </div>
             )}
           </div>

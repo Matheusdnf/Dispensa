@@ -17,7 +17,7 @@ export function ProductForm({
   const [ValidateError, setValidateError] = useState("");
   const [successmensage, setsuccessmensage] = useState("");
   const router = useRouter();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let hasError = false;
@@ -61,6 +61,7 @@ export function ProductForm({
       setValidateError("");
     }
     if (!hasError) {
+      
       console.log("Formulário enviado com sucesso!", {
         Name,
         Description,

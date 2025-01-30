@@ -23,7 +23,7 @@ export function Modal_function({ pantryId, productId }) {
 
   // Função para confirmar a exclusão
   const handleConfirmDelete = async () => {
-    const response = await deleteProduct(productId, user.id)
+    const response = await deleteProduct(productId, user.id);
     console.log("Produto excluído!"); // Lógica para excluir o produto
     setsuccessmensage("Exclusão Realizado com Sucesso!");
     setTimeout(() => {
