@@ -1,7 +1,7 @@
 "use client";
 import { ShowCard } from "@/app/components/showCard";
-import { Nav_bar_itens } from "../components/navbar";
-import { fetchPantries } from "../lib/pantries";
+import { Nav_bar_itens } from "@/app/components/navbar";
+import { fetchPantries } from "@/app/lib/pantries"
 import { useState } from "react";
 import { useEffect } from "react";
 import { Dropdown_Pentries, Dropdown_Products } from "../components/dropdown";

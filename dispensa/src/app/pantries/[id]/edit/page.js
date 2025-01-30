@@ -1,21 +1,42 @@
 "use client";
 import { handleChange } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-export function ProductForm({
+import { editPantry } from "@/app/lib/pantries";
+import { supabase } from "@/app/lib/supabase/SupabaseClient";
+import { use } from "react";
+
+export function PantryForm({
   Name,
   setName,
   Description,
   setDescription,
   image,
   setImage,
+  pantryId, // Recebe o ID da despensa como prop
 }) {
   const [NameError, setNameError] = useState("");
   const [DescriptionError, setDescriptionError] = useState("");
   const [successmensage, setsuccessmensage] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
   const router = useRouter();
+
+  // Função para obter o ID do usuário logado
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -29,7 +50,8 @@ export function ProductForm({
       reader.readAsDataURL(file);
     }
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let hasError = false;
@@ -53,7 +75,6 @@ export function ProductForm({
           <ul>
             <li>Ter no mínimo 3 Letras e no máximo 30</li>
           </ul>
-          va
         </div>
       );
       hasError = true;
@@ -61,17 +82,31 @@ export function ProductForm({
       setDescriptionError("");
     }
 
-    if (!hasError) {
-      console.log("Formulário enviado com sucesso!", {
-        Name,
-        Description,
-        image,
-      });
-      setsuccessmensage("Edição Realizada com Sucesso!");
-      setTimeout(() => {
-        setsuccessmensage("");
-        router.push("/pantries");
-      }, 2000);
+    if (!hasError && userId) {
+      try {
+        const { data, error } = await editPantry(
+          pantryId, 
+          Name, 
+          Description, 
+          image, 
+          userId 
+        );
+
+        if (error) {
+          console.error("Erro ao editar despensa:", error);
+          setsuccessmensage("Erro ao editar despensa. Tente novamente.");
+        } else {
+          console.log("Despensa atualizada com sucesso:", data);
+          setsuccessmensage("Edição Realizada com Sucesso!");
+          setTimeout(() => {
+            setsuccessmensage("");
+            router.push("/pantries"); 
+          }, 2000);
+        }
+      } catch (error) {
+        console.error("Erro ao editar despensa:", error.message);
+        setsuccessmensage("Erro ao editar despensa. Tente novamente.");
+      }
     }
   };
 
@@ -134,7 +169,7 @@ export function ProductForm({
           </div>
 
           <div className="d-flex justify-content-center align-items-center mt-3">
-            <button className="btn  btn-primary mt-3" type="submit">
+            <button className="btn btn-primary mt-3" type="submit">
               Editar
             </button>
           </div>
@@ -147,20 +182,24 @@ export function ProductForm({
   );
 }
 
-export default function Login_Products() {
+export default function EditPantryPage({ params }) {
   const [Name, setName] = useState("");
   const [Description, setDescription] = useState("");
   const [image, setImage] = useState(null);
 
+  // Captura o ID da despensa da URL
+  const pantryId = use(params).id;
+
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
-      <ProductForm
+      <PantryForm
         Name={Name}
         setName={setName}
         Description={Description}
         setDescription={setDescription}
         image={image}
         setImage={setImage}
+        pantryId={pantryId} // Passa o ID da despensa como prop
       />
     </div>
   );
