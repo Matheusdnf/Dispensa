@@ -1,11 +1,14 @@
 "use client";
-import Image from "next/image";
-
-//elaborar uma tela sobre
+import { Footer } from "./components/footer";
+import { Navbar } from "./components/navbar";
 export default function Home() {
   return (
     <div>
-      <img src="img/invalid.jpg" width={700} height={700}></img>
+      <Navbar />
+      <h1>Bem Vindo !!</h1>
+      <span>
+        Esse projeto se trata de uma Dispensa Compartilhada, a qual é{" "}
+      </span>
     </div>
   );
 }
