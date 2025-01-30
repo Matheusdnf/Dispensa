@@ -1,5 +1,5 @@
 import Link from "next/link";
-export function Navbar({ text, route }) {
+export function Navbar({ text, route = "/" }) {
   return (
     <nav className="navbar bg-body-none shadow-sm">
       <div className="container-fluid">
