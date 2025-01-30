@@ -2,7 +2,9 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import style from "@/app/style/button.module.css";
+import { deletePantry } from "@/app/lib/pantries";
 import Link from "next/link";
+import { useAuth } from "@/app/lib/auth";
 
 export function Modal_function({ pantryId, productId }) {
   const [showMainModal, setShowMainModal] = useState(false);
@@ -104,6 +106,7 @@ export function Modal_function({ pantryId, productId }) {
 }
 
 export function Modal_function_pratries({ pantryId }) {
+  const { user } = useAuth();
   const [showMainModal, setShowMainModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [successmensage, setsuccessmensage] = useState("");
@@ -117,8 +120,9 @@ export function Modal_function_pratries({ pantryId }) {
   const handleShowDeleteModal = () => setShowDeleteModal(true);
 
   // Função para confirmar a exclusão
-  const handleConfirmDelete = () => {
-    console.log("Dispensa excluída!"); // Lógica para excluir o produto
+  const handleConfirmDelete = async () => {
+    const response = await deletePantry(pantryId, user.id);
+    console.log("Dispensa excluída!"); // Lógica para excluir a despensa
     setsuccessmensage("Exclusão Realizado com Sucesso!");
     setTimeout(() => {
       setsuccessmensage("");
