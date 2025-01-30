@@ -1,6 +1,6 @@
 export function Navbar() {
   return (
-    <nav className="navbar bg-body-none">
+    <nav className="navbar bg-body-none shadow-sm">
       <div className="container-fluid">
         <a
           className="navbar-brand d-flex align-items-center text-decoration-none"

@@ -46,7 +46,7 @@ export default function scream_pantry() {
         name_nav_bar={"Sessão de Dispensas"}
         Dropdown={<Dropdown_Pentries />}
       />
-      <ShowCard itens={products} ismodal={false} />
+      <ShowCard itens={products} ismodal={false} button_pantries={true} />
     </div>
   );
 }

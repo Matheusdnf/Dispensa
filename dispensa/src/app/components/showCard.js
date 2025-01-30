@@ -2,8 +2,8 @@ import card from "@/app/style/card.module.css";
 import { useState } from "react";
 import { Not_information } from "./not_information";
 import Link from "next/link";
-import { Modal_function } from "./modal";
-export function ShowCard({ itens, ismodal }) {
+import { Modal_function, Modal_function_pratries } from "./modal";
+export function ShowCard({ itens, ismodal, button_pantries }) {
   //Manipuladores de Evento
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [imgSrc, setImgSrc] = useState("");
@@ -56,6 +56,11 @@ export function ShowCard({ itens, ismodal }) {
               <Link className="btn btn-primary" href={"/products"}>
                 Saber mais Informação
               </Link>
+            )}
+            {button_pantries && (
+              <div className=" pt-2">
+                <Modal_function_pratries />
+              </div>
             )}
           </div>
         </div>

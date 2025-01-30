@@ -2,6 +2,7 @@
 import { ShowCard } from "@/app/components/showCard";
 import { Nav_bar_itens } from "../components/navbar";
 import { Dropdown_Products } from "../components/dropdown";
+
 const products = [
   {
     name: "Produto 1",
@@ -51,8 +52,8 @@ export default function Page_products() {
   return (
     <div>
       <Nav_bar_itens
-        name_nav_bar={"Sessão de Produtos"}
         Dropdown={<Dropdown_Products />}
+        name_nav_bar={"Sessão de Produtos"}
       />
       <ShowCard itens={products} ismodal={true} />
     </div>

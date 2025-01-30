@@ -4,7 +4,7 @@ import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
 import { useAuth } from "@/app/lib/auth";
 import { createPantry } from "@/app/lib/pantries";
-
+import { useRouter } from "next/navigation";
 export function PantryForm({
   Name,
   setName,
@@ -17,6 +17,8 @@ export function PantryForm({
   const [NameError, setNameError] = useState("");
   const [DescriptionError, setDescriptionError] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const [successmensage, setsuccessmensage] = useState("");
+  const router = useRouter();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -64,10 +66,10 @@ export function PantryForm({
     }
 
     if (!hasError) {
-      const result = await createPantry(Name, Description, image, user.id)
-      
-      if(result.error) {
-        console.log("Erro no envio ao banco", result.error)
+      const result = await createPantry(Name, Description, image, user.id);
+
+      if (result.error) {
+        console.log("Erro no envio ao banco", result.error);
       }
 
       console.log("Formulário enviado com sucesso!", {
@@ -75,6 +77,11 @@ export function PantryForm({
         Description,
         image,
       });
+      setsuccessmensage("Cadastro Realizado com Sucesso!");
+      setTimeout(() => {
+        setsuccessmensage("");
+        router.push("/pentries");
+      }, 2000);
     }
   };
 
@@ -151,6 +158,9 @@ export function PantryForm({
             Cadastrar
           </button>
         </div>
+        {successmensage && (
+          <div className="alert alert-success mt-3">{successmensage}</div>
+        )}
       </form>
     </div>
   );
@@ -161,7 +171,7 @@ export default function Login_Pantries() {
   const [Description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   return (
-    <div>
+    <div className="d-flex justify-content-center align-items-center vh-100">
       <PantryForm
         Name={Name}
         setName={setName}

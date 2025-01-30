@@ -123,7 +123,7 @@ export function ProductForm({
 export default function Login_Products() {
   const [Name, setName] = useState("");
   const [Description, setDescription] = useState("");
-  const [Validate, setValidate] = useState("");
+  const [Validate, setValidate] = useState(null);
 
   return (
     <div>
