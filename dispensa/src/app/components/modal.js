@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import style from "@/app/style/button.module.css";
 import Link from "next/link";
 
-export function Modal_function() {
+export function Modal_function({ pantryId, productId }) {
   const [showMainModal, setShowMainModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [successmensage, setsuccessmensage] = useState("");
@@ -43,7 +43,7 @@ export function Modal_function() {
         <Modal.Body>
           <div className="m-6 bg-clip-padding">
             <p>Você Deseja Editar o Produto:</p>
-            <Link href={"./products/edit"}>
+            <Link href={`/pantries/${pantryId}/products/${productId}/edit`}>
               <Button
                 variant="btn custom-button"
                 onClick={handleCloseMainModal}
@@ -103,7 +103,7 @@ export function Modal_function() {
   );
 }
 
-export function Modal_function_pratries() {
+export function Modal_function_pratries({ pantryId }) {
   const [showMainModal, setShowMainModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [successmensage, setsuccessmensage] = useState("");
@@ -142,7 +142,7 @@ export function Modal_function_pratries() {
         <Modal.Body>
           <div className="m-6 bg-clip-padding">
             <p>Você Deseja Editar a Dispensa:</p>
-            <Link href={"./pantries/edit"}>
+            <Link href={`/pantries/${pantryId}/edit`}>
               <Button
                 variant="btn custom-button"
                 onClick={handleCloseMainModal}
