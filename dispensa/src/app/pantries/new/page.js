@@ -80,7 +80,7 @@ export function PantryForm({
       setsuccessmensage("Cadastro Realizado com Sucesso!");
       setTimeout(() => {
         setsuccessmensage("");
-        router.push("/pentries");
+        router.push("/pantries");
       }, 2000);
     }
   };

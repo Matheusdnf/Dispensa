@@ -1,5 +1,20 @@
 import { supabase } from "@/app/lib/supabase/SupabaseClient";
 
+export const fetchPantries = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('pantries') 
+        .select('*') // Seleciona todas as colunas
+        .eq('user_id', userId);
+  
+      if (error) throw error;
+      return data; // Retorna os dados obtidos
+    } catch (error) {
+      console.error('Erro ao buscar despensas:', error.message);
+      return []; // Retorna um array vazio em caso de erro
+    }
+  };
+
 export async function createPantry(name, description, imageFile, userId) {
   if (!name || !description || !userId) {
     return { error: "Nome, descrição e ID do usuário são obrigatórios." };

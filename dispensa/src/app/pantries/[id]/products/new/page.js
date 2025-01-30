@@ -2,6 +2,7 @@
 import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
+import { createProduct } from "@/app/lib/products";
 
 export function ProductForm({
   Name,
@@ -15,7 +16,7 @@ export function ProductForm({
   const [DescriptionError, setDescriptionError] = useState("");
   const [ValidateError, setValidateError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let hasError = false;
@@ -59,6 +60,21 @@ export function ProductForm({
       setValidateError("");
     }
     if (!hasError) {
+      const response = await createProduct(
+        Name,
+        Description,
+        10,
+        "06ab96d3-b579-45dd-97ad-ed047ac2a583",
+        Validate,
+        null
+      );
+
+      if (response.error) {
+        console.log("Erro ao cadastrar produto", response.error);
+      } else {
+        console.log("Produto cadastrado com sucesso");
+      }
+
       console.log("Formulário enviado com sucesso!", {
         Name,
         Description,
@@ -123,7 +139,7 @@ export function ProductForm({
 export default function Login_Products() {
   const [Name, setName] = useState("");
   const [Description, setDescription] = useState("");
-  const [Validate, setValidate] = useState(null);
+  const [Validate, setValidate] = useState("");
 
   return (
     <div>

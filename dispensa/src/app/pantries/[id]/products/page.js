@@ -1,8 +1,7 @@
 "use client";
 import { ShowCard } from "@/app/components/showCard";
-import { Nav_bar_itens } from "../components/navbar";
-import { Dropdown_Products } from "../components/dropdown";
-
+import { Nav_bar_itens } from "@/app/components/navbar";
+import { Dropdown_Products } from "@/app/components/dropdown";
 const products = [
   {
     name: "Produto 1",
