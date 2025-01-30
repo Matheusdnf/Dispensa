@@ -119,3 +119,53 @@ export async function editPantry(id, name, description, imageFile, userId) {
 
   return { data };
 }
+
+export async function deletePantry(id, userId) {
+  if (!id || !userId) {
+    return { error: "ID da despensa e ID do usuário são obrigatórios." };
+  }
+
+  try {
+    // Busca a despensa para obter o caminho da imagem (se houver)
+    const { data: pantry, error: fetchError } = await supabase
+      .from("pantries")
+      .select("image")
+      .eq("id", id)
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (fetchError) {
+      console.error("Erro ao buscar despensa:", fetchError.message);
+      return { error: fetchError.message };
+    }
+
+    // Se houver uma imagem associada, exclui do armazenamento
+    if (pantry.image) {
+      const { error: deleteImageError } = await supabase.storage
+        .from("pantry-images")
+        .remove([pantry.image]);
+
+      if (deleteImageError) {
+        console.error("Erro ao excluir imagem:", deleteImageError.message);
+        return { error: deleteImageError.message };
+      }
+    }
+
+    // Exclui a despensa do banco de dados
+    const { error: deleteError } = await supabase
+      .from("pantries")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", userId);
+
+    if (deleteError) {
+      console.error("Erro ao excluir despensa:", deleteError.message);
+      return { error: deleteError.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Erro inesperado ao excluir despensa:", error.message);
+    return { error: error.message };
+  }
+}
