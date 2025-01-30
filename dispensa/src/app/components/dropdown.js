@@ -16,8 +16,8 @@ export function Dropdown_Pentries() {
             Cadastrar Dispensa
           </Link>
         </li>
-        <li>
-          <Link href={"#"} className="dropdown-item">
+        {/* <li>
+          <Link href={"./pantries/edit"} className="dropdown-item">
             Editar Dispensa
           </Link>
         </li>
@@ -25,7 +25,7 @@ export function Dropdown_Pentries() {
           <Link className="dropdown-item" href="#">
             Excluir Dispensa
           </Link>
-        </li>
+        </li> */}
       </ul>
     </div>
   );
@@ -48,7 +48,7 @@ export function Dropdown_Products() {
             Cadastrar Produto
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link href={"#"} className="dropdown-item">
             Editar Produto
           </Link>
@@ -57,7 +57,7 @@ export function Dropdown_Products() {
           <Link className="dropdown-item" href="#">
             Excluir Produto
           </Link>
-        </li>
+        </li> */}
       </ul>
     </div>
   );
