@@ -1,0 +1,23 @@
+.custom_spacing {
+  margin: 7rem;
+}
+
+.box {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: rgb(241, 233, 233);
+}
+
+.button {
+  padding: 25px;
+  margin: 25px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+}
