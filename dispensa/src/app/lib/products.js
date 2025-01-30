@@ -77,18 +77,10 @@ export async function createProduct(
 }
 
 // Editar um produto
-export async function editProduct(
-  id,
-  name,
-  description,
-  price,
-  imageFile,
-  userId
-) {
-  if (!id || !name || !description || !price || !userId) {
+export async function editProduct(id, name, description, quantity, imageFile) {
+  if (!id || !name || !description || !quantity) {
     return {
-      error:
-        "ID do produto, nome, descrição, preço e ID do usuário são obrigatórios.",
+      error: "ID do produto, nome, descrição e quantidade são obrigatórios.",
     };
   }
 
@@ -122,7 +114,7 @@ export async function editProduct(
 
     // Faz o upload da nova imagem
     const fileExt = imageFile.name.split(".").pop();
-    const filePath = `${userId}/${Date.now()}.${fileExt}`;
+    const filePath = `${id}/${Date.now()}.${fileExt}`;
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("product-images")
@@ -142,9 +134,8 @@ export async function editProduct(
   // Atualiza o produto no banco de dados
   const { data, error } = await supabase
     .from("products")
-    .update({ name, description, price, image: imageUrl })
-    .eq("id", id)
-    .eq("user_id", userId); // Garante que apenas o dono do produto possa editá-lo
+    .update({ name, description, quantity, image: imageUrl })
+    .eq("id", id);
 
   if (error) {
     console.error("Erro ao atualizar produto:", error.message);

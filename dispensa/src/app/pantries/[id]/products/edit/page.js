@@ -2,8 +2,10 @@
 import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Navbar } from "@/app/components/navbar";
+import { editProducts } from "@/app/lib/products"; // Importe a função editProducts
+
 export function ProductForm({
   Name,
   setName,
@@ -61,17 +63,21 @@ export function ProductForm({
       setValidateError("");
     }
     if (!hasError) {
-      
-      console.log("Formulário enviado com sucesso!", {
-        Name,
-        Description,
-        Validate,
-      });
-      setsuccessmensage("Edição Realizada com Sucesso!");
-      setTimeout(() => {
-        setsuccessmensage("");
-        router.push("/products");
-      }, 2000);
+      try {
+        await editProducts({ Name, Description, Validate }); // Chame a função editProducts
+        console.log("Formulário enviado com sucesso!", {
+          Name,
+          Description,
+          Validate,
+        });
+        setsuccessmensage("Edição Realizada com Sucesso!");
+        setTimeout(() => {
+          setsuccessmensage("");
+          router.push("/products");
+        }, 2000);
+      } catch (error) {
+        console.error("Erro ao editar o produto:", error);
+      }
     }
   };
 
@@ -131,7 +137,8 @@ export function ProductForm({
   );
 }
 
-export default function Login_Products() {
+export default function Login_Products({ params }) {
+  const { id } = useParams(params);
   const [Name, setName] = useState("");
   const [Description, setDescription] = useState("");
   const [Validate, setValidate] = useState("");

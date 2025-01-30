@@ -28,6 +28,7 @@ export function ShowCard({ itens, ismodal, button_pantries }) {
   return (
     <div className="d-flex flex-wrap justify-content-around">
       {itens.map((p, index) => (
+        console.log(p),
         <div
           className={`card m-3 ${card.card} ${
             hoveredIndex === index ? card.cardHovered : ""
@@ -51,7 +52,7 @@ export function ShowCard({ itens, ismodal, button_pantries }) {
             ) : (
               <Link
                 className="btn btn-primary"
-                href={`/pantries/${p.pantry_id}/products/${p.id}`}
+                href={`/pantries/${p.id}/products/`}
               >
                 Saber mais Informação
               </Link>

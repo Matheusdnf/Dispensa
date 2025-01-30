@@ -2,7 +2,7 @@
 import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/app/lib/supabase/SupabaseClient";
 import { editProduct } from "@/app/lib/products"; // Importar função de edição de produto
 
@@ -11,12 +11,15 @@ export function ProductForm({
   setName,
   Description,
   setDescription,
+  Quantity,
+  setQuantity,
   Validate,
   setValidate,
   productId, // Recebe o ID do produto como prop
 }) {
   const [NameError, setNameError] = useState("");
   const [DescriptionError, setDescriptionError] = useState("");
+  const [QuantityError, setQuantityError] = useState("");
   const [ValidateError, setValidateError] = useState("");
   const [successmensage, setsuccessmensage] = useState("");
   const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
@@ -67,6 +70,13 @@ export function ProductForm({
       setDescriptionError("");
     }
 
+    if (!Quantity || Quantity <= 0) {
+      setQuantityError("A quantidade deve ser maior que zero.");
+      hasError = true;
+    } else {
+      setQuantityError("");
+    }
+
     if (!validate_Date(Validate)) {
       setValidateError(
         <div>
@@ -87,8 +97,8 @@ export function ProductForm({
           productId, // ID do produto
           Name,
           Description,
-          Validate, // Data de validade
-          userId
+          Quantity, // Quantidade
+          null, // imageFile (não estamos usando)
         );
 
         if (error) {
@@ -136,7 +146,18 @@ export function ProductForm({
               <div className="text-danger">{DescriptionError}</div>
             )}
           </div>
-
+          <div className="input-group mb-3">
+            <input
+              type="number"
+              className="form-control w-100"
+              placeholder="Quantidade"
+              onChange={(e) => handleChange(e, setQuantity)}
+              value={Quantity}
+            />
+            {QuantityError && (
+              <div className="text-danger">{QuantityError}</div>
+            )}
+          </div>
           <div className="input-group mb-3">
             <input
               type="Date"
@@ -164,11 +185,35 @@ export function ProductForm({
   );
 }
 
-export default function EditProductPage({ params }) {
+export default function EditProductPage() {
+  const params = useParams();
   const [Name, setName] = useState("");
   const [Description, setDescription] = useState("");
+  const [Quantity, setQuantity] = useState("");
   const [Validate, setValidate] = useState("");
   const productId = params.pid; // Captura o ID do produto da URL
+
+  // Carrega os dados do produto existente
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", productId)
+        .single();
+
+      if (error) {
+        console.error("Erro ao buscar produto:", error.message);
+      } else {
+        setName(data.name);
+        setDescription(data.description);
+        setQuantity(data.quantity);
+        setValidate(data.expiration);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -177,6 +222,8 @@ export default function EditProductPage({ params }) {
         setName={setName}
         Description={Description}
         setDescription={setDescription}
+        Quantity={Quantity}
+        setQuantity={setQuantity}
         Validate={Validate}
         setValidate={setValidate}
         productId={productId} // Passa o ID do produto como prop
