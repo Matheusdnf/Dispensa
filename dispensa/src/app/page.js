@@ -9,6 +9,20 @@ export default function Home() {
       <Navbar />
       <div className=" d-flex flex-column justify-content-center  text-center">
         <h1 className={` ${style.custom_spacing}`}> Bem Vindo !!</h1>
+        <div className="container-fluid">
+          <span className={` ${style.logo}`}>
+            <img
+              src="/img/Compartilhado.png"
+              alt="Logo"
+              width="50"
+              height="50"
+              className="d-inline-block me-2"
+            />
+            <span style={{ position: "relative", top: "-2px" }}>
+              Dispensa Compartilhada
+            </span>
+          </span>
+        </div>
         <div className={` ${style.box}`}>
           <span className={` ${style.span}`}>
             Esse projeto trata-se de uma Dispensa, a qual é possível definir
