@@ -10,8 +10,11 @@ export function ShowCard({ itens, ismodal, button_pantries }) {
   const [imgSrc, setImgSrc] = useState("");
 
   // Caso a imagem apresente erro, chama essa função
-  const handleError = () => {
-    setImgSrc("/img/compartilhado.png");
+  const handleError = (index) => {
+    setImgSrc((prev) => ({
+      ...prev,
+      [index]: "/img/invalid.jpg",
+    }));
   };
 
   const handleMouseEnter = (index) => {
@@ -42,12 +45,10 @@ export function ShowCard({ itens, ismodal, button_pantries }) {
           onMouseLeave={handleMouseLeave}
         >
           <img
-            // Manipulador de evento para pegar a imagem atual
-            src={imgSrc || p.img}
+            src={imgSrc[index] || p.img}
             className="card-img-top"
             alt={p.name}
-            // Caso a imagem tenha dado erro, chamar uma imagem diferente no lugar
-            onError={handleError}
+            onError={() => handleError(index)}
           />
           <div className="card-body">
             <h5 className="card-title">{p.name}</h5>
