@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { editPantry } from "@/app/lib/pantries";
 import { supabase } from "@/app/lib/supabase/SupabaseClient";
 import { use } from "react";
+import { Navbar } from "@/app/components/navbar";
 
 export function PantryForm({
   Name,
@@ -85,11 +86,11 @@ export function PantryForm({
     if (!hasError && userId) {
       try {
         const { data, error } = await editPantry(
-          pantryId, 
-          Name, 
-          Description, 
-          image, 
-          userId 
+          pantryId,
+          Name,
+          Description,
+          image,
+          userId
         );
 
         if (error) {
@@ -100,7 +101,7 @@ export function PantryForm({
           setsuccessmensage("Edição Realizada com Sucesso!");
           setTimeout(() => {
             setsuccessmensage("");
-            router.push("/pantries"); 
+            router.push("/pantries");
           }, 2000);
         }
       } catch (error) {
@@ -191,16 +192,19 @@ export default function EditPantryPage({ params }) {
   const pantryId = use(params).id;
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <PantryForm
-        Name={Name}
-        setName={setName}
-        Description={Description}
-        setDescription={setDescription}
-        image={image}
-        setImage={setImage}
-        pantryId={pantryId} // Passa o ID da despensa como prop
-      />
+    <div>
+      <Navbar route={"../pantries"} text={"Edição de Dispensa"} />
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <PantryForm
+          Name={Name}
+          setName={setName}
+          Description={Description}
+          setDescription={setDescription}
+          image={image}
+          setImage={setImage}
+          pantryId={pantryId} // Passa o ID da despensa como prop
+        />
+      </div>
     </div>
   );
 }

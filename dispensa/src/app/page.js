@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div>
-      <Navbar />
+      <Navbar text={"Dispensa Compartilhada"} route={"#"} />
       <div className=" d-flex flex-column justify-content-center  text-center">
         <h1 className={` ${style.custom_spacing}`}> Bem Vindo !!</h1>
         <div className="container-fluid">

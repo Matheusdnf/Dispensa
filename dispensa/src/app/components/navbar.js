@@ -1,10 +1,11 @@
-export function Navbar() {
+import Link from "next/link";
+export function Navbar({ text, route }) {
   return (
     <nav className="navbar bg-body-none shadow-sm">
       <div className="container-fluid">
-        <a
+        <Link
           className="navbar-brand d-flex align-items-center text-decoration-none"
-          href="#"
+          href={route}
           style={{ cursor: "default" }}
         >
           <img
@@ -14,10 +15,8 @@ export function Navbar() {
             height="20"
             className="d-inline-block me-2"
           />
-          <span style={{ position: "relative", top: "-2px" }}>
-            Dispensa Compartilhada
-          </span>
-        </a>
+          <span style={{ position: "relative", top: "-2px" }}>{text}</span>
+        </Link>
       </div>
     </nav>
   );

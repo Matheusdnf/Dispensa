@@ -3,6 +3,7 @@ import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Navbar } from "@/app/components/navbar";
 export function ProductForm({
   Name,
   setName,
@@ -135,15 +136,18 @@ export default function Login_Products() {
   const [Validate, setValidate] = useState("");
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <ProductForm
-        Name={Name}
-        setName={setName}
-        Description={Description}
-        setDescription={setDescription}
-        Validate={Validate}
-        setValidate={setValidate}
-      />
+    <div>
+      <Navbar text={"Edição de Produto"} route={"./products"} />
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <ProductForm
+          Name={Name}
+          setName={setName}
+          Description={Description}
+          setDescription={setDescription}
+          Validate={Validate}
+          setValidate={setValidate}
+        />
+      </div>
     </div>
   );
 }
