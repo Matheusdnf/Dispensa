@@ -3,7 +3,7 @@ import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState } from "react";
 import { createProduct } from "@/app/lib/products";
-
+import { useRouter } from "next/navigation";
 export function ProductForm({
   Name,
   setName,
@@ -11,11 +11,28 @@ export function ProductForm({
   setDescription,
   Validate,
   setValidate,
+  image,
+  setImage,
 }) {
   const [NameError, setNameError] = useState("");
   const [DescriptionError, setDescriptionError] = useState("");
   const [ValidateError, setValidateError] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const [successmensage, setsuccessmensage] = useState("");
+  const router = useRouter();
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
 
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -63,6 +80,7 @@ export function ProductForm({
       const response = await createProduct(
         Name,
         Description,
+        image,
         10,
         "06ab96d3-b579-45dd-97ad-ed047ac2a583",
         Validate,
@@ -79,7 +97,13 @@ export function ProductForm({
         Name,
         Description,
         Validate,
+        image,
       });
+      setsuccessmensage("Cadastro Realizado com Sucesso!");
+      setTimeout(() => {
+        setsuccessmensage("");
+        router.push("/products");
+      }, 2000);
     }
   };
 
@@ -110,7 +134,35 @@ export function ProductForm({
               <div className="text-danger">{DescriptionError}</div>
             )}
           </div>
+          <div className="col-md-5">
+            <label htmlFor="imageUpload" className="form-label">
+              Imagem:
+            </label>
+            <input
+              type="file"
+              id="imageUpload"
+              name="image"
+              accept="image/*"
+              className="form-control"
+              onChange={handleFileChange}
+            />
 
+            {imagePreview && (
+              <div className="d-flex justify-content-center mt-3">
+                <img
+                  src={imagePreview}
+                  alt="Imagem selecionada"
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                  className="img-fluid"
+                />
+              </div>
+            )}
+          </div>
           <div className="input-group mb-3">
             <input
               type="Date"
@@ -140,6 +192,7 @@ export default function Login_Products() {
   const [Name, setName] = useState("");
   const [Description, setDescription] = useState("");
   const [Validate, setValidate] = useState("");
+  const [image, setImage] = useState(null);
 
   return (
     <div>
@@ -150,6 +203,8 @@ export default function Login_Products() {
         setDescription={setDescription}
         Validate={Validate}
         setValidate={setValidate}
+        image={image}
+        setImage={setImage}
       />
     </div>
   );
