@@ -2,6 +2,7 @@
 import { ShowCard } from "@/app/components/showCard";
 import { Nav_bar_itens } from "@/app/components/navbar";
 import { fetchPantries } from "@/app/lib/pantries";
+import { LogoutButton } from "@/app/components/logoutButton";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
@@ -22,9 +23,12 @@ export default function PantriesPage() {
       <Nav_bar_itens
         name_nav_bar="Minhas Despensas"
         actions={
-          <Link href="/pantries/new" className="btn btn-primary">
-            Criar despensa
-          </Link>
+          <>
+            <Link href="/pantries/new" className="btn btn-primary">
+              Criar despensa
+            </Link>
+            <LogoutButton />
+          </>
         }
       />
 

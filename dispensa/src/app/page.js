@@ -1,5 +1,7 @@
+import { redirect } from "next/navigation";
 import { Footer } from "./components/footer";
 import { Navbar } from "./components/navbar";
+import { getSessionUserId } from "@/app/lib/session";
 import style from "@/app/style/home.module.css";
 import Link from "next/link";
 
@@ -20,7 +22,10 @@ const beneficios = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  // Usuário já logado vai direto para suas despensas.
+  if (await getSessionUserId()) redirect("/pantries");
+
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar

@@ -1,13 +1,13 @@
-"use client";
 import { LoginForm } from "@/app/components/loginForm";
 import { Navbar } from "@/app/components/navbar";
-import { useState } from "react";
+import { getSessionUserId } from "@/app/lib/session";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import style from "@/app/style/auth.module.css";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default async function Login() {
+  // Usuário já logado não precisa ver a tela de login.
+  if (await getSessionUserId()) redirect("/pantries");
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -29,12 +29,7 @@ export default function Login() {
           </aside>
 
           <div className={style.form_side}>
-            <LoginForm
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-            />
+            <LoginForm />
           </div>
         </div>
       </main>

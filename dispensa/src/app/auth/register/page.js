@@ -1,14 +1,13 @@
-"use client";
 import { RegisterForm } from "@/app/components/registerForm";
 import { Navbar } from "@/app/components/navbar";
-import { useState } from "react";
+import { getSessionUserId } from "@/app/lib/session";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import style from "@/app/style/auth.module.css";
 
-export default function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+export default async function Register() {
+  // Usuário já logado não precisa ver a tela de registro.
+  if (await getSessionUserId()) redirect("/pantries");
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -30,14 +29,7 @@ export default function Register() {
           </aside>
 
           <div className={style.form_side}>
-            <RegisterForm
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              username={username}
-              setUsername={setUsername}
-            />
+            <RegisterForm />
           </div>
         </div>
       </main>

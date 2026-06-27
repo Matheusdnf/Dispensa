@@ -58,6 +58,7 @@ export default function NewPantryPage() {
     <div className="d-flex flex-column min-vh-100">
       <Nav_bar_itens
         name_nav_bar="Criar Despensa"
+        backHref="/pantries"
         actions={
           <button type="submit" form="pantry-form" className="btn btn-primary">
             Salvar
