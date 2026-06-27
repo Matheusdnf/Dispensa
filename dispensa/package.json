@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.48.1",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "next": "15.1.6",
