@@ -33,6 +33,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env
 
+# banco de dados SQLite local e uploads de imagens
+/data
+/public/uploads
+
 # vercel
 .vercel
 
