@@ -2,36 +2,45 @@
 import { ShowCard } from "@/app/components/showCard";
 import { Nav_bar_itens } from "@/app/components/navbar";
 import { fetchPantries } from "@/app/lib/pantries";
-import { useState } from "react";
-import { useEffect } from "react";
-import { Dropdown_Pentries, Dropdown_Products } from "../components/dropdown";
-export default function scream_pantry() {
+import { useState, useEffect } from "react";
+import Link from "next/link";
+
+export default function PantriesPage() {
   const [pantries, setPantries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const getPantries = async () => {
-      try {
-        const data = await fetchPantries();
-        setPantries(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getPantries();
+    fetchPantries()
+      .then(setPantries)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <div>
+    <div className="d-flex flex-column min-vh-100">
       <Nav_bar_itens
-        name_nav_bar={"Sessão de Dispensas"}
-        Dropdown={<Dropdown_Pentries />}
+        name_nav_bar="Minhas Despensas"
+        actions={
+          <Link href="/pantries/new" className="btn btn-primary">
+            Criar despensa
+          </Link>
+        }
       />
-      <ShowCard itens={pantries} ismodal={false} button_pantries={true} />
+
+      <main id="main-content" className="flex-fill">
+        {loading ? (
+          <p className="p-4" role="status">
+            Carregando…
+          </p>
+        ) : error ? (
+          <p className="p-4 text-danger" role="alert">
+            Erro: {error}
+          </p>
+        ) : (
+          <ShowCard itens={pantries} ismodal={false} button_pantries={true} />
+        )}
+      </main>
     </div>
   );
 }
