@@ -3,8 +3,7 @@ import { handleChange, validate_Date } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { supabase } from "@/app/lib/supabase/SupabaseClient";
-import { editProduct } from "@/app/lib/products"; // Importar função de edição de produto
+import { editProduct, fetchProduct } from "@/app/lib/products";
 
 export function ProductForm({
   Name,
@@ -22,22 +21,8 @@ export function ProductForm({
   const [QuantityError, setQuantityError] = useState("");
   const [ValidateError, setValidateError] = useState("");
   const [successmensage, setsuccessmensage] = useState("");
-  const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
   const router = useRouter();
-
-  // Função para obter o ID do usuário logado
-  useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const { id: pantryId } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,7 +75,7 @@ export function ProductForm({
       setValidateError("");
     }
 
-    if (!hasError && userId) {
+    if (!hasError) {
       try {
         // Chama a função de edição de produto
         const { data, error } = await editProduct(
@@ -99,6 +84,7 @@ export function ProductForm({
           Description,
           Quantity, // Quantidade
           null, // imageFile (não estamos usando)
+          Validate // Validade
         );
 
         if (error) {
@@ -109,7 +95,7 @@ export function ProductForm({
           setsuccessmensage("Edição Realizada com Sucesso!");
           setTimeout(() => {
             setsuccessmensage("");
-            router.push("/products"); // Redireciona para a lista de produtos
+            router.push(`/pantries/${pantryId}/products`);
           }, 2000);
         }
       } catch (error) {
@@ -195,24 +181,17 @@ export default function EditProductPage() {
 
   // Carrega os dados do produto existente
   useEffect(() => {
-    const fetchProduct = async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("id", productId)
-        .single();
-
-      if (error) {
-        console.error("Erro ao buscar produto:", error.message);
-      } else {
-        setName(data.name);
-        setDescription(data.description);
-        setQuantity(data.quantity);
-        setValidate(data.expiration);
+    const loadProduct = async () => {
+      const data = await fetchProduct(productId);
+      if (data) {
+        setName(data.name ?? "");
+        setDescription(data.description ?? "");
+        setQuantity(data.quantity ?? "");
+        setValidate(data.expiration ?? "");
       }
     };
 
-    fetchProduct();
+    loadProduct();
   }, [productId]);
 
   return (

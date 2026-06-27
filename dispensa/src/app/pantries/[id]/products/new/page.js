@@ -110,7 +110,7 @@ export function ProductForm({
       setsuccessmensage("Cadastro Realizado com Sucesso!");
       setTimeout(() => {
         setsuccessmensage("");
-        router.push("/products");
+        router.push(`/pantries/${pantryId}/products`);
       }, 2000);
     }
   };

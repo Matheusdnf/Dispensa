@@ -1,22 +1,21 @@
-import { supabase } from "@/app/lib/supabase/SupabaseClient";
+/**
+ * Cliente dos produtos. Conversa com as rotas da API, que derivam o usuário da
+ * sessão e checam se a despensa pertence a ele. Argumentos extras (como userId)
+ * passados por chamadas antigas são ignorados.
+ */
 
-// Buscar todos os produtos de um usuário
 export const fetchProducts = async (pantryId) => {
-  try {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*") // Seleciona todas as colunas
-      .eq("pantry_id", pantryId);
-
-    if (error) throw error;
-    return data; // Retorna os dados obtidos
-  } catch (error) {
-    console.error("Erro ao buscar produtos:", error.message);
-    return []; // Retorna um array vazio em caso de erro
-  }
+  const res = await fetch(`/api/pantries/${pantryId}/products`);
+  if (!res.ok) return [];
+  return res.json();
 };
 
-// Criar um novo produto
+export async function fetchProduct(id) {
+  const res = await fetch(`/api/products/${id}`);
+  if (!res.ok) return null;
+  return res.json();
+}
+
 export async function createProduct(
   name,
   description,
@@ -25,173 +24,53 @@ export async function createProduct(
   pantryId,
   expiration
 ) {
-  // Verifica se todos os parâmetros obrigatórios foram fornecidos
-  if (!name || !description || !quantity || !pantryId || !expiration) {
-    return {
-      error:
-        "Nome, descrição, quantidade, ID da despensa e data de vencimento são obrigatórios.",
-    };
-  }
+  const form = new FormData();
+  form.append("name", name ?? "");
+  form.append("description", description ?? "");
+  if (quantity != null && quantity !== "") form.append("quantity", quantity);
+  if (expiration) form.append("expiration", expiration);
+  if (imageFile) form.append("image", imageFile);
 
-  let imageUrl = null;
-
-  // Se houver um arquivo de imagem, faz o upload
-  if (imageFile) {
-    try {
-      const fileExt = imageFile.name.split(".").pop();
-      const filePath = `${pantryId}/${Date.now()}.${fileExt}`;
-
-      const { data, error: uploadError } = await supabase.storage
-        .from("product-images")
-        .upload(filePath, imageFile);
-
-      if (uploadError) throw uploadError;
-
-      imageUrl = data.path; // Obtém o caminho da imagem após o upload
-    } catch (uploadError) {
-      console.error("Erro ao fazer upload da imagem:", uploadError.message);
-      return { error: uploadError.message };
-    }
-  }
-
-  // Insere o novo produto no banco de dados
-  try {
-    const { data, error } = await supabase.from("products").insert([
-      {
-        name,
-        description,
-        quantity,
-        pantry_id: pantryId,
-        expiration,
-        image: imageUrl,
-      },
-    ]);
-
-    if (error) throw error;
-
-    return { data }; // Retorna os dados do produto inserido
-  } catch (error) {
-    console.error("Erro ao criar produto:", error.message);
-    return { error: error.message };
-  }
-}
-
-// Editar um produto
-export async function editProduct(id, name, description, quantity, imageFile) {
-  if (!id || !name || !description || !quantity) {
-    return {
-      error: "ID do produto, nome, descrição e quantidade são obrigatórios.",
-    };
-  }
-
-  let imageUrl = null;
-
-  // Verifica se uma nova imagem foi fornecida
-  if (imageFile) {
-    // Exclui a imagem antiga, se existir
-    const { data: existingProduct, error: fetchError } = await supabase
-      .from("products")
-      .select("image")
-      .eq("id", id)
-      .single();
-
-    if (fetchError) {
-      console.error("Erro ao buscar produto:", fetchError.message);
-      return { error: fetchError.message };
-    }
-
-    if (existingProduct.image) {
-      // Remove a imagem antiga do armazenamento
-      const { error: deleteError } = await supabase.storage
-        .from("product-images")
-        .remove([existingProduct.image]);
-
-      if (deleteError) {
-        console.error("Erro ao excluir imagem antiga:", deleteError.message);
-        return { error: deleteError.message };
-      }
-    }
-
-    // Faz o upload da nova imagem
-    const fileExt = imageFile.name.split(".").pop();
-    const filePath = `${id}/${Date.now()}.${fileExt}`;
-
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from("product-images")
-      .upload(filePath, imageFile);
-
-    if (uploadError) {
-      console.error(
-        "Erro ao fazer upload da nova imagem:",
-        uploadError.message
-      );
-      return { error: uploadError.message };
-    }
-
-    imageUrl = uploadData.path;
-  }
-
-  // Atualiza o produto no banco de dados
-  const { data, error } = await supabase
-    .from("products")
-    .update({ name, description, quantity, image: imageUrl })
-    .eq("id", id);
-
-  if (error) {
-    console.error("Erro ao atualizar produto:", error.message);
-    return { error: error.message };
-  }
-
+  const res = await fetch(`/api/pantries/${pantryId}/products`, {
+    method: "POST",
+    body: form,
+  });
+  const data = await res.json();
+  if (!res.ok) return { error: data.error || "Erro ao criar produto." };
   return { data };
 }
 
-// Deletar um produto
-export async function deleteProduct(id, userId) {
-  if (!id || !userId) {
-    return { error: "ID do produto e ID do usuário são obrigatórios." };
+export async function editProduct(
+  id,
+  name,
+  description,
+  quantity,
+  imageFile,
+  expiration
+) {
+  const form = new FormData();
+  if (name != null) form.append("name", name);
+  if (description != null) form.append("description", description);
+  if (quantity != null && quantity !== "") form.append("quantity", quantity);
+  if (expiration != null) form.append("expiration", expiration);
+  if (imageFile) form.append("image", imageFile);
+
+  const res = await fetch(`/api/products/${id}`, { method: "PUT", body: form });
+  const data = await res.json();
+  if (!res.ok) return { error: data.error || "Erro ao editar produto." };
+  return { data };
+}
+
+export async function deleteProduct(id) {
+  const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    return { error: data.error || "Erro ao excluir produto." };
   }
+  return { success: true };
+}
 
-  try {
-    // Busca o produto para obter o caminho da imagem (se houver)
-    const { data: product, error: fetchError } = await supabase
-      .from("products")
-      .select("image")
-      .eq("id", id)
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    if (fetchError) {
-      console.error("Erro ao buscar produto:", fetchError.message);
-      return { error: fetchError.message };
-    }
-
-    // Se houver uma imagem associada, exclui do armazenamento
-    if (product.image) {
-      const { error: deleteImageError } = await supabase.storage
-        .from("product-images")
-        .remove([product.image]);
-
-      if (deleteImageError) {
-        console.error("Erro ao excluir imagem:", deleteImageError.message);
-        return { error: deleteImageError.message };
-      }
-    }
-
-    // Exclui o produto do banco de dados
-    const { error: deleteError } = await supabase
-      .from("products")
-      .delete()
-      .eq("id", id)
-      .eq("user_id", userId);
-
-    if (deleteError) {
-      console.error("Erro ao excluir produto:", deleteError.message);
-      return { error: deleteError.message };
-    }
-
-    return { success: true };
-  } catch (error) {
-    console.error("Erro inesperado ao excluir produto:", error.message);
-    return { error: error.message };
-  }
+// Compatibilidade com uma página de edição antiga que importa editProducts.
+export async function editProducts() {
+  return { error: "Operação não suportada." };
 }

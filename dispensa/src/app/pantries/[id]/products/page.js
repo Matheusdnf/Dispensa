@@ -4,7 +4,6 @@ import { useParams } from "next/navigation"; // Importe o hook useParams
 import { ShowCard } from "@/app/components/showCard";
 import { Nav_bar_itens } from "@/app/components/navbar";
 import { Dropdown_Products } from "@/app/components/dropdown";
-import { supabase } from "@/app/lib/supabase/SupabaseClient";
 import { fetchProducts } from "@/app/lib/products";
 
 export default function Page_products() {
@@ -18,15 +17,7 @@ export default function Page_products() {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        // Obtém o usuário logado
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (!user) {
-          throw new Error("Usuário não autenticado");
-        }
-
-        // Busca os produtos do usuário logado e da despensa selecionada
+        // Busca os produtos da despensa selecionada (a API valida a sessão)
         const data = await fetchProducts(id);
         setProducts(data); // Atualiza o estado com os dados obtidos
       } catch (error) {
