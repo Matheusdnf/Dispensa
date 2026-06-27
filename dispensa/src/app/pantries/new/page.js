@@ -1,185 +1,159 @@
 "use client";
-import { handleChange } from "@/app/lib/validations";
-import { validate_name } from "@/app/lib/validations";
+import { handleChange, validate_name } from "@/app/lib/validations";
 import { useState } from "react";
-import { useAuth } from "@/app/lib/auth";
 import { createPantry } from "@/app/lib/pantries";
 import { useRouter } from "next/navigation";
-export function PantryForm({
-  Name,
-  setName,
-  Description,
-  setDescription,
-  image,
-  setImage,
-}) {
-  const { user } = useAuth();
-  const [NameError, setNameError] = useState("");
-  const [DescriptionError, setDescriptionError] = useState("");
+import { Nav_bar_itens } from "@/app/components/navbar";
+import form_style from "@/app/style/form.module.css";
+
+export default function NewPantryPage() {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [successmensage, setsuccessmensage] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [success, setSuccess] = useState("");
   const router = useRouter();
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    setImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError("");
 
     let hasError = false;
-
-    if (!validate_name(Name)) {
-      setNameError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(name)) {
+      setNameError("O nome deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setNameError("");
     }
-
-    if (!validate_name(Description)) {
-      setDescriptionError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(description)) {
+      setDescriptionError("A descrição deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setDescriptionError("");
     }
+    if (hasError) return;
 
-    if (!hasError) {
-      const result = await createPantry(Name, Description, image, user.id);
-
-      if (result.error) {
-        console.log("Erro no envio ao banco", result.error);
-      }
-
-      console.log("Formulário enviado com sucesso!", {
-        Name,
-        Description,
-        image,
-      });
-      setsuccessmensage("Cadastro Realizado com Sucesso!");
-      setTimeout(() => {
-        setsuccessmensage("");
-        router.push("/pantries");
-      }, 2000);
+    const result = await createPantry(name, description, image);
+    if (result.error) {
+      setFormError(result.error);
+      return;
     }
+    setSuccess("Despensa criada com sucesso!");
+    setTimeout(() => router.push("/pantries"), 1200);
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <h1>Cadastrar Despensa</h1>
-        <div className="d-flex flex-wrap justify-content-between">
-          <div className="col-12 col-md-5 mb-3">
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Nome"
-                onChange={(e) => handleChange(e, setName)}
-                value={Name}
-              />
-              {NameError && <div className="text-danger">{NameError}</div>}
-            </div>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Descrição"
-                onChange={(e) => handleChange(e, setDescription)}
-                value={Description}
-              />
-              {DescriptionError && (
-                <div className="text-danger">{DescriptionError}</div>
-              )}
-            </div>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Usuários"
-              />
-            </div>
-          </div>
+    <div className="d-flex flex-column min-vh-100">
+      <Nav_bar_itens
+        name_nav_bar="Criar Despensa"
+        actions={
+          <button type="submit" form="pantry-form" className="btn btn-primary">
+            Salvar
+          </button>
+        }
+      />
 
-          <div className="col-md-5">
-            <label htmlFor="imageUpload" className="form-label">
-              Imagem:
+      <main
+        id="main-content"
+        className="flex-fill d-flex justify-content-center p-3"
+      >
+        <form
+          id="pantry-form"
+          onSubmit={handleSubmit}
+          noValidate
+          className={form_style.form}
+        >
+          {formError && (
+            <div className="alert alert-danger" role="alert">
+              {formError}
+            </div>
+          )}
+          {success && (
+            <div className="alert alert-success" role="status">
+              {success}
+            </div>
+          )}
+
+          <div className="mb-3">
+            <label htmlFor="pantry-name" className="form-label">
+              Nome da despensa
             </label>
             <input
+              id="pantry-name"
+              type="text"
+              className="form-control"
+              value={name}
+              onChange={(e) => handleChange(e, setName)}
+              aria-invalid={nameError ? "true" : "false"}
+              aria-describedby={nameError ? "pantry-name-error" : undefined}
+            />
+            {nameError && (
+              <p id="pantry-name-error" className="text-danger small mt-1 mb-0">
+                {nameError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="pantry-description" className="form-label">
+              Descrição
+            </label>
+            <input
+              id="pantry-description"
+              type="text"
+              className="form-control"
+              value={description}
+              onChange={(e) => handleChange(e, setDescription)}
+              aria-invalid={descriptionError ? "true" : "false"}
+              aria-describedby={
+                descriptionError ? "pantry-description-error" : undefined
+              }
+            />
+            {descriptionError && (
+              <p
+                id="pantry-description-error"
+                className="text-danger small mt-1 mb-0"
+              >
+                {descriptionError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="pantry-image" className="form-label">
+              Anexar imagem
+            </label>
+            <input
+              id="pantry-image"
               type="file"
-              id="imageUpload"
-              name="image"
               accept="image/*"
               className="form-control"
               onChange={handleFileChange}
             />
-
             {imagePreview && (
-              <div className="d-flex justify-content-center mt-3">
+              <div className="mt-3 text-center">
                 <img
                   src={imagePreview}
-                  alt="Imagem selecionada"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                  className="img-fluid"
+                  alt="Pré-visualização da imagem da despensa"
+                  className={form_style.preview}
                 />
               </div>
             )}
           </div>
-        </div>
-
-        <div className="d-flex justify-content-center align-items-center mt-3">
-          <button className="btn btn-primary mt-3" type="submit">
-            Cadastrar
-          </button>
-        </div>
-        {successmensage && (
-          <div className="alert alert-success mt-3">{successmensage}</div>
-        )}
-      </form>
-    </div>
-  );
-}
-
-export default function Login_Pantries() {
-  const [Name, setName] = useState("");
-  const [Description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
-  return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <PantryForm
-        Name={Name}
-        setName={setName}
-        Description={Description}
-        setDescription={setDescription}
-        image={image}
-        setImage={setImage}
-      />
+        </form>
+      </main>
     </div>
   );
 }
