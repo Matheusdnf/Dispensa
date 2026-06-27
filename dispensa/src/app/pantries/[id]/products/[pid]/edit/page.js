@@ -1,6 +1,6 @@
 "use client";
-import { handleChange, validate_Date } from "@/app/lib/validations/page";
-import { validate_name } from "@/app/lib/validations/page";
+import { handleChange, validate_Date } from "@/app/lib/validations";
+import { validate_name } from "@/app/lib/validations";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { editProduct, fetchProduct } from "@/app/lib/products";

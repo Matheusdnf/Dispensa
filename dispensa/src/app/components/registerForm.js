@@ -5,7 +5,7 @@ import {
   validatePassword,
   handleChange,
   validate_name,
-} from "@/app/lib/validations/page";
+} from "@/app/lib/validations";
 import { useState } from "react";
 import { signupUser } from "../lib/signupUser";
 import Link from "next/link";

@@ -1,6 +1,6 @@
 "use client";
-import { handleChange } from "@/app/lib/validations/page";
-import { validate_name } from "@/app/lib/validations/page";
+import { handleChange } from "@/app/lib/validations";
+import { validate_name } from "@/app/lib/validations";
 import { useState } from "react";
 import { useAuth } from "@/app/lib/auth";
 import { createPantry } from "@/app/lib/pantries";

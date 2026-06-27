@@ -3,7 +3,7 @@ import {
   validateEmail,
   validatePassword,
   handleChange,
-} from "@/app/lib/validations/page";
+} from "@/app/lib/validations";
 import { useState } from "react";
 import { signinUser } from "@/app/lib/signinUser";
 import Link from "next/link";
