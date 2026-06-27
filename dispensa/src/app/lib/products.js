@@ -35,7 +35,7 @@ export async function createProduct(
     method: "POST",
     body: form,
   });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) return { error: data.error || "Erro ao criar produto." };
   return { data };
 }
@@ -56,7 +56,7 @@ export async function editProduct(
   if (imageFile) form.append("image", imageFile);
 
   const res = await fetch(`/api/products/${id}`, { method: "PUT", body: form });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) return { error: data.error || "Erro ao editar produto." };
   return { data };
 }

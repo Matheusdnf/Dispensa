@@ -9,9 +9,11 @@ export async function signinUser(email, password) {
     body: JSON.stringify({ email, password }),
   });
 
-  const data = await res.json();
+  // Se o servidor devolver erro 500 (ex.: Node sem suporte a node:sqlite), a
+  // resposta pode não ser JSON; evitamos quebrar e mostramos uma mensagem.
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    return { error: data.error || "Não foi possível entrar." };
+    return { error: data.error || "Não foi possível entrar. Tente novamente." };
   }
   return { data };
 }
