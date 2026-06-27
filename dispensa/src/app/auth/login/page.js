@@ -1,7 +1,9 @@
 "use client";
-import { Navbar } from "@/app/components/navbar";
 import { LoginForm } from "@/app/components/loginForm";
+import { Navbar } from "@/app/components/navbar";
 import { useState } from "react";
+import Link from "next/link";
+import style from "@/app/style/auth.module.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,24 +11,33 @@ export default function Login() {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <div className="d-flex flex-row flex-fill">
-        <div className="col-12 col-lg-6 ">
-          <img
-            src="/img/dispensa.jpg"
-            width="100%"
-            height="75%"
-            style={{ objectFit: "cover" }}
-          />
+      <Navbar text="Despensa Virtual" />
+      <main
+        id="main-content"
+        className="flex-fill d-flex align-items-center justify-content-center p-3"
+      >
+        <div className={style.card}>
+          <aside className={style.welcome}>
+            <h2 className={style.welcome_title}>Bem-vindo de volta!</h2>
+            <p className={style.welcome_text}>
+              A Despensa Virtual é a melhor maneira de organizar seus alimentos.
+            </p>
+            <p className="mb-2">Ainda não tem uma conta?</p>
+            <Link href="/auth/register" className="btn btn-outline-light">
+              Registrar
+            </Link>
+          </aside>
+
+          <div className={style.form_side}>
+            <LoginForm
+              email={email}
+              setEmail={setEmail}
+              password={password}
+              setPassword={setPassword}
+            />
+          </div>
         </div>
-        <div className="col-12 col-lg-6 d-flex flex-column justify-content-center p-4">
-          <LoginForm
-            email={email}
-            setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
-          />
-        </div>
-      </div>
+      </main>
     </div>
   );
 }
