@@ -23,7 +23,7 @@ export async function createPantry(name, description, imageFile) {
   if (imageFile) form.append("image", imageFile);
 
   const res = await fetch("/api/pantries", { method: "POST", body: form });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) return { error: data.error || "Erro ao criar despensa." };
   return { data };
 }
@@ -35,7 +35,7 @@ export async function editPantry(id, name, description, imageFile) {
   if (imageFile) form.append("image", imageFile);
 
   const res = await fetch(`/api/pantries/${id}`, { method: "PUT", body: form });
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) return { error: data.error || "Erro ao editar despensa." };
   return { data };
 }

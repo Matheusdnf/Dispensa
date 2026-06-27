@@ -26,10 +26,17 @@ Projeto da disciplina de Programação Web (PWEB).
 
 ## Pré-requisitos
 
-- **Node.js 22 ou superior** (necessário para o módulo `node:sqlite`)
+- **Node.js 24 ou superior** — o projeto usa o módulo nativo `node:sqlite`, que
+  só está disponível sem flags experimentais a partir do Node 24.
 - npm
 
-Verifique sua versão com `node --version`.
+Verifique sua versão com `node --version`. Em versões mais antigas (ex.: Node 22
+LTS), o cadastro/login falha com erro 500 porque o `node:sqlite` ainda exige a
+flag `--experimental-sqlite`.
+
+> **Não é preciso instalar o SQLite separadamente.** Ele vem embutido no próprio
+> Node (como `node:crypto` ou `node:fs`); o `npm install` cuida apenas das
+> dependências JavaScript.
 
 ## Como rodar
 

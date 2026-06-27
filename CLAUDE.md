@@ -15,8 +15,8 @@ comandos a partir dessa pasta.
 
 - **Next.js 15** (App Router) + **React 19**
 - **Bootstrap 5** + **react-bootstrap** para UI; CSS Modules para estilos locais
-- **SQLite** via **`node:sqlite`** (SQLite nativo do Node 22+, sem dependência
-  nativa para compilar)
+- **SQLite** via **`node:sqlite`** (SQLite nativo do Node; sem flag a partir do
+  **Node 24**, sem dependência nativa para compilar)
 - **bcryptjs** para hash de senha; sessão por **cookie httpOnly assinado**
 
 > Não há mais Supabase. Toda a persistência e autenticação são locais.
