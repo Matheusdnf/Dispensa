@@ -5,7 +5,7 @@ import {
   handleChange,
 } from "@/app/lib/validations/page";
 import { useState } from "react";
-import { signinUser } from "@/app/lib/supabase/signinUser";
+import { signinUser } from "@/app/lib/signinUser";
 import Link from "next/link";
 
 export function LoginForm({ email, setEmail, password, setPassword }) {

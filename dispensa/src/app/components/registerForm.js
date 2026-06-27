@@ -7,7 +7,7 @@ import {
   validate_name,
 } from "@/app/lib/validations/page";
 import { useState } from "react";
-import { signupUser } from "../lib/supabase/signupUser";
+import { signupUser } from "../lib/signupUser";
 import Link from "next/link";
 export function RegisterForm({
   email,
