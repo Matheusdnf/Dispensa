@@ -1,47 +1,57 @@
 import Link from "next/link";
-export function Navbar({ text, route = "/" }) {
+
+/**
+ * Cabeçalho de marca. Mostra o logo + título à esquerda e um slot opcional de
+ * ações à direita (botões), como no wireframe da homepage.
+ */
+export function Navbar({ text = "Despensa Virtual", route = "/", actions = null }) {
   return (
-    <nav className="navbar bg-body-none shadow-sm">
-      <div className="container-fluid">
+    <nav
+      className="navbar bg-white shadow-sm"
+      aria-label="Navegação principal"
+    >
+      <div className="container-fluid d-flex align-items-center justify-content-between gap-3">
         <Link
-          className="navbar-brand d-flex align-items-center text-decoration-none"
+          className="navbar-brand d-flex align-items-center text-decoration-none m-0"
           href={route}
-          style={{ cursor: "default" }}
         >
+          {/* Logo decorativo: o nome ao lado já identifica a marca (alt vazio) */}
           <img
-            src="/img/Compartilhado.png"
-            alt="Logo"
-            width="20"
-            height="20"
+            src="/img/compartilhado.png"
+            alt=""
+            width="28"
+            height="28"
             className="d-inline-block me-2"
           />
-          <span style={{ position: "relative", top: "-2px" }}>{text}</span>
+          <span className="fw-semibold text-dark">{text}</span>
         </Link>
+        {actions && (
+          <div className="d-flex align-items-center gap-2 flex-wrap">{actions}</div>
+        )}
       </div>
     </nav>
   );
 }
 
-export function Nav_bar_itens({ name_nav_bar, Dropdown }) {
+/**
+ * Cabeçalho de seção (listas). Título à esquerda (com dropdown opcional) e
+ * ações à direita, como nas telas "Minhas Despensas" e "Despensa X".
+ */
+export function Nav_bar_itens({ name_nav_bar, Dropdown, actions = null }) {
   return (
-    <div>
-      <nav className="shadow-sm p-4 navbar navbar-light bg-light d-flex align-items-center justify-content-between">
-        <div className="d-flex align-items-center">
-          <h4 className="size-11 me-3">{name_nav_bar}</h4>
+    <nav
+      className="navbar bg-white shadow-sm px-3 px-md-4 py-3"
+      aria-label={name_nav_bar}
+    >
+      <div className="container-fluid d-flex align-items-center justify-content-between gap-3 flex-wrap">
+        <div className="d-flex align-items-center gap-3">
+          <h1 className="h4 m-0">{name_nav_bar}</h1>
           {Dropdown}
         </div>
-        <form className="d-flex">
-          <input
-            className="form-control me-2"
-            type="search"
-            placeholder="Pesquisar"
-            aria-label="Pesquisar"
-          />
-          <button className="btn btn-outline-success" type="submit">
-            Pesquisar
-          </button>
-        </form>
-      </nav>
-    </div>
+        {actions && (
+          <div className="d-flex align-items-center gap-2 flex-wrap">{actions}</div>
+        )}
+      </div>
+    </nav>
   );
 }
