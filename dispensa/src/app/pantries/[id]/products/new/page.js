@@ -77,6 +77,7 @@ export default function NewProductPage() {
     <div className="d-flex flex-column min-vh-100">
       <Nav_bar_itens
         name_nav_bar="Adicionar Produto"
+        backHref={`/pantries/${pantryId}/products`}
         actions={
           <button type="submit" form="product-form" className="btn btn-primary">
             Salvar
