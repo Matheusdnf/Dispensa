@@ -1,0 +1,114 @@
+/*
+ * Base de design da Dispensa Compartilhada.
+ * Tokens de cor com contraste AA, foco visível por teclado e
+ * sobrescritas do Bootstrap para a cor de marca (#271d94).
+ */
+
+:root {
+  /* Marca */
+  --brand: #271d94;
+  --brand-dark: #16114f;
+  --brand-soft: #ece9fb;
+
+  /* Superfícies e texto */
+  --surface: #ffffff;
+  --surface-muted: #f5f4fb;
+  --text: #1a1a2e;
+  --text-muted: #4a4a63;
+  --border: #d8d7e3;
+
+  /* Estados */
+  --danger: #b3261e;
+  --success: #1b5e20;
+
+  /* Forma */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 3px rgba(26, 26, 46, 0.08);
+  --shadow-md: 0 8px 24px rgba(39, 29, 148, 0.12);
+
+  /* Sobrescritas globais do Bootstrap */
+  --bs-primary: var(--brand);
+  --bs-primary-rgb: 39, 29, 148;
+  --bs-body-color: var(--text);
+  --bs-link-color: var(--brand);
+  --bs-link-hover-color: var(--brand-dark);
+  --bs-border-radius: var(--radius-sm);
+}
+
+body {
+  background-color: var(--surface-muted);
+  color: var(--text);
+}
+
+/* Botões na cor de marca, mantendo a API do Bootstrap */
+.btn-primary {
+  --bs-btn-bg: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand-dark);
+  --bs-btn-hover-border-color: var(--brand-dark);
+  --bs-btn-active-bg: var(--brand-dark);
+  --bs-btn-active-border-color: var(--brand-dark);
+  --bs-btn-disabled-bg: var(--brand);
+  --bs-btn-disabled-border-color: var(--brand);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand);
+  --bs-btn-hover-border-color: var(--brand);
+  --bs-btn-active-bg: var(--brand-dark);
+  --bs-btn-active-border-color: var(--brand-dark);
+}
+
+/* Acessibilidade: foco de teclado sempre visível e com alto contraste */
+*:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Não remover o outline padrão quando o foco vem do teclado */
+.btn:focus-visible,
+.form-control:focus-visible,
+a:focus-visible {
+  box-shadow: 0 0 0 3px rgba(255, 191, 71, 0.6);
+}
+
+/* Link "pular para o conteúdo" para usuários de teclado/leitor de tela */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 1100;
+  background: var(--brand);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0 var(--radius-sm) 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* Conteúdo visível só para leitores de tela */
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,210 +1,169 @@
 "use client";
-import { handleChange } from "@/app/lib/validations/page";
-import { validate_name } from "@/app/lib/validations/page";
-import { useState, useEffect } from "react";
+import { handleChange, validate_name } from "@/app/lib/validations";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { editPantry } from "@/app/lib/pantries";
-import { supabase } from "@/app/lib/supabase/SupabaseClient";
-import { use } from "react";
-import { Navbar } from "@/app/components/navbar";
+import { editPantry, fetchPantry } from "@/app/lib/pantries";
+import { Nav_bar_itens } from "@/app/components/navbar";
+import form_style from "@/app/style/form.module.css";
 
-export function PantryForm({
-  Name,
-  setName,
-  Description,
-  setDescription,
-  image,
-  setImage,
-  pantryId, // Recebe o ID da despensa como prop
-}) {
-  const [NameError, setNameError] = useState("");
-  const [DescriptionError, setDescriptionError] = useState("");
-  const [successmensage, setsuccessmensage] = useState("");
+export default function EditPantryPage({ params }) {
+  const pantryId = use(params).id;
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [success, setSuccess] = useState("");
   const router = useRouter();
 
-  // Função para obter o ID do usuário logado
   useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
+    fetchPantry(pantryId).then((data) => {
+      if (data) {
+        setName(data.name ?? "");
+        setDescription(data.description ?? "");
       }
-    };
-
-    fetchUser();
-  }, []);
+    });
+  }, [pantryId]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    setImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError("");
 
     let hasError = false;
-
-    if (!validate_name(Name)) {
-      setNameError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(name)) {
+      setNameError("O nome deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setNameError("");
     }
-
-    if (!validate_name(Description)) {
-      setDescriptionError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(description)) {
+      setDescriptionError("A descrição deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setDescriptionError("");
     }
+    if (hasError) return;
 
-    if (!hasError && userId) {
-      try {
-        const { data, error } = await editPantry(
-          pantryId,
-          Name,
-          Description,
-          image,
-          userId
-        );
-
-        if (error) {
-          console.error("Erro ao editar despensa:", error);
-          setsuccessmensage("Erro ao editar despensa. Tente novamente.");
-        } else {
-          console.log("Despensa atualizada com sucesso:", data);
-          setsuccessmensage("Edição Realizada com Sucesso!");
-          setTimeout(() => {
-            setsuccessmensage("");
-            router.push("/pantries");
-          }, 2000);
-        }
-      } catch (error) {
-        console.error("Erro ao editar despensa:", error.message);
-        setsuccessmensage("Erro ao editar despensa. Tente novamente.");
-      }
+    const result = await editPantry(pantryId, name, description, image);
+    if (result.error) {
+      setFormError(result.error);
+      return;
     }
+    setSuccess("Despensa atualizada com sucesso!");
+    setTimeout(() => router.push("/pantries"), 1200);
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <h1 className="p-5">Editar Dispensa</h1>
-        <div>
-          <div className="input-group mb-3">
+    <div className="d-flex flex-column min-vh-100">
+      <Nav_bar_itens
+        name_nav_bar="Editar Despensa"
+        actions={
+          <button type="submit" form="pantry-form" className="btn btn-primary">
+            Salvar
+          </button>
+        }
+      />
+
+      <main
+        id="main-content"
+        className="flex-fill d-flex justify-content-center p-3"
+      >
+        <form
+          id="pantry-form"
+          onSubmit={handleSubmit}
+          noValidate
+          className={form_style.form}
+        >
+          {formError && (
+            <div className="alert alert-danger" role="alert">
+              {formError}
+            </div>
+          )}
+          {success && (
+            <div className="alert alert-success" role="status">
+              {success}
+            </div>
+          )}
+
+          <div className="mb-3">
+            <label htmlFor="pantry-name" className="form-label">
+              Nome da despensa
+            </label>
             <input
+              id="pantry-name"
               type="text"
-              className="form-control w-100"
-              placeholder="Nome"
+              className="form-control"
+              value={name}
               onChange={(e) => handleChange(e, setName)}
-              value={Name}
+              aria-invalid={nameError ? "true" : "false"}
+              aria-describedby={nameError ? "pantry-name-error" : undefined}
             />
-            {NameError && <div className="text-danger">{NameError}</div>}
-          </div>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control w-100"
-              placeholder="Descrição"
-              onChange={(e) => handleChange(e, setDescription)}
-              value={Description}
-            />
-            {DescriptionError && (
-              <div className="text-danger">{DescriptionError}</div>
+            {nameError && (
+              <p id="pantry-name-error" className="text-danger small mt-1 mb-0">
+                {nameError}
+              </p>
             )}
           </div>
 
-          <div className="col-md-5">
-            <label htmlFor="imageUpload" className="form-label">
-              Imagem:
+          <div className="mb-3">
+            <label htmlFor="pantry-description" className="form-label">
+              Descrição
             </label>
             <input
+              id="pantry-description"
+              type="text"
+              className="form-control"
+              value={description}
+              onChange={(e) => handleChange(e, setDescription)}
+              aria-invalid={descriptionError ? "true" : "false"}
+              aria-describedby={
+                descriptionError ? "pantry-description-error" : undefined
+              }
+            />
+            {descriptionError && (
+              <p
+                id="pantry-description-error"
+                className="text-danger small mt-1 mb-0"
+              >
+                {descriptionError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="pantry-image" className="form-label">
+              Trocar imagem
+            </label>
+            <input
+              id="pantry-image"
               type="file"
-              id="imageUpload"
-              name="image"
               accept="image/*"
               className="form-control"
               onChange={handleFileChange}
             />
-
             {imagePreview && (
-              <div className="d-flex justify-content-center mt-3">
+              <div className="mt-3 text-center">
                 <img
                   src={imagePreview}
-                  alt="Imagem selecionada"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                  className="img-fluid"
+                  alt="Pré-visualização da imagem da despensa"
+                  className={form_style.preview}
                 />
               </div>
             )}
           </div>
-
-          <div className="d-flex justify-content-center align-items-center mt-3">
-            <button className="btn btn-primary mt-3" type="submit">
-              Editar
-            </button>
-          </div>
-          {successmensage && (
-            <div className="alert alert-success mt-3">{successmensage}</div>
-          )}
-        </div>
-      </form>
-    </div>
-  );
-}
-
-export default function EditPantryPage({ params }) {
-  const [Name, setName] = useState("");
-  const [Description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
-
-  // Captura o ID da despensa da URL
-  const pantryId = use(params).id;
-
-  return (
-    <div>
-      <Navbar route={"../pantries"} text={"Edição de Dispensa"} />
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <PantryForm
-          Name={Name}
-          setName={setName}
-          Description={Description}
-          setDescription={setDescription}
-          image={image}
-          setImage={setImage}
-          pantryId={pantryId} // Passa o ID da despensa como prop
-        />
-      </div>
+        </form>
+      </main>
     </div>
   );
 }

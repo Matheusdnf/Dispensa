@@ -1,0 +1,42 @@
+/* Card de autenticação em duas colunas (login e registro). */
+
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 920px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+/* Painel de boas-vindas (esquerda no wireframe) */
+.welcome {
+  flex: 1 1 300px;
+  background: var(--brand);
+  color: #fff;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.welcome_title {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.welcome_text {
+  opacity: 0.92;
+  margin-bottom: 2rem;
+}
+
+/* Lado do formulário (direita no wireframe) */
+.form_side {
+  flex: 1 1 320px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

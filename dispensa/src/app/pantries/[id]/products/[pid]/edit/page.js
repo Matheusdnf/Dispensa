@@ -1,233 +1,195 @@
 "use client";
-import { handleChange, validate_Date } from "@/app/lib/validations/page";
-import { validate_name } from "@/app/lib/validations/page";
+import { handleChange, validate_name, validate_Date } from "@/app/lib/validations";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { supabase } from "@/app/lib/supabase/SupabaseClient";
-import { editProduct } from "@/app/lib/products"; // Importar função de edição de produto
+import { editProduct, fetchProduct } from "@/app/lib/products";
+import { Nav_bar_itens } from "@/app/components/navbar";
+import form_style from "@/app/style/form.module.css";
 
-export function ProductForm({
-  Name,
-  setName,
-  Description,
-  setDescription,
-  Quantity,
-  setQuantity,
-  Validate,
-  setValidate,
-  productId, // Recebe o ID do produto como prop
-}) {
-  const [NameError, setNameError] = useState("");
-  const [DescriptionError, setDescriptionError] = useState("");
-  const [QuantityError, setQuantityError] = useState("");
-  const [ValidateError, setValidateError] = useState("");
-  const [successmensage, setsuccessmensage] = useState("");
-  const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
+export default function EditProductPage() {
+  const { id: pantryId, pid: productId } = useParams();
   const router = useRouter();
 
-  // Função para obter o ID do usuário logado
-  useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-      }
-    };
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [validate, setValidate] = useState("");
 
-    fetchUser();
-  }, []);
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [validateError, setValidateError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  useEffect(() => {
+    fetchProduct(productId).then((data) => {
+      if (data) {
+        setName(data.name ?? "");
+        setDescription(data.description ?? "");
+        setQuantity(data.quantity ?? "");
+        setValidate(data.expiration ?? "");
+      }
+    });
+  }, [productId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError("");
 
     let hasError = false;
-
-    if (!validate_name(Name)) {
-      setNameError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(name)) {
+      setNameError("O nome deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setNameError("");
     }
-
-    if (!validate_name(Description)) {
-      setDescriptionError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(description)) {
+      setDescriptionError("A descrição deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setDescriptionError("");
     }
-
-    if (!Quantity || Quantity <= 0) {
-      setQuantityError("A quantidade deve ser maior que zero.");
-      hasError = true;
-    } else {
-      setQuantityError("");
-    }
-
-    if (!validate_Date(Validate)) {
-      setValidateError(
-        <div>
-          <ul>
-            <li>Digite Uma Data Válida</li>
-          </ul>
-        </div>
-      );
+    if (validate && !validate_Date(validate)) {
+      setValidateError("Informe uma data de validade válida.");
       hasError = true;
     } else {
       setValidateError("");
     }
+    if (hasError) return;
 
-    if (!hasError && userId) {
-      try {
-        // Chama a função de edição de produto
-        const { data, error } = await editProduct(
-          productId, // ID do produto
-          Name,
-          Description,
-          Quantity, // Quantidade
-          null, // imageFile (não estamos usando)
-        );
-
-        if (error) {
-          console.error("Erro ao editar produto:", error);
-          setsuccessmensage("Erro ao editar produto. Tente novamente.");
-        } else {
-          console.log("Produto atualizado com sucesso:", data);
-          setsuccessmensage("Edição Realizada com Sucesso!");
-          setTimeout(() => {
-            setsuccessmensage("");
-            router.push("/products"); // Redireciona para a lista de produtos
-          }, 2000);
-        }
-      } catch (error) {
-        console.error("Erro ao editar produto:", error.message);
-        setsuccessmensage("Erro ao editar produto. Tente novamente.");
-      }
+    const { error } = await editProduct(
+      productId,
+      name,
+      description,
+      quantity,
+      null,
+      validate
+    );
+    if (error) {
+      setFormError(error);
+      return;
     }
+    setSuccess("Produto atualizado com sucesso!");
+    setTimeout(() => router.push(`/pantries/${pantryId}/products`), 1200);
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <h1>Editar Produto</h1>
-        <div>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control w-100"
-              placeholder="Nome"
-              onChange={(e) => handleChange(e, setName)}
-              value={Name}
-            />
-            {NameError && <div className="text-danger">{NameError}</div>}
-          </div>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control w-100"
-              placeholder="Descrição"
-              onChange={(e) => handleChange(e, setDescription)}
-              value={Description}
-            />
-            {DescriptionError && (
-              <div className="text-danger">{DescriptionError}</div>
-            )}
-          </div>
-          <div className="input-group mb-3">
-            <input
-              type="number"
-              className="form-control w-100"
-              placeholder="Quantidade"
-              onChange={(e) => handleChange(e, setQuantity)}
-              value={Quantity}
-            />
-            {QuantityError && (
-              <div className="text-danger">{QuantityError}</div>
-            )}
-          </div>
-          <div className="input-group mb-3">
-            <input
-              type="Date"
-              className="form-control w-100"
-              placeholder="Validade"
-              onChange={(e) => handleChange(e, setValidate)}
-              value={Validate}
-            />
-            {ValidateError && (
-              <div className="text-danger">{ValidateError}</div>
-            )}
-          </div>
-
-          <div className="d-flex justify-content-center align-items-center mt-3">
-            <button className="btn btn-primary mt-3" type="submit">
-              Editar
-            </button>
-          </div>
-          {successmensage && (
-            <div className="alert alert-success mt-3">{successmensage}</div>
-          )}
-        </div>
-      </form>
-    </div>
-  );
-}
-
-export default function EditProductPage() {
-  const params = useParams();
-  const [Name, setName] = useState("");
-  const [Description, setDescription] = useState("");
-  const [Quantity, setQuantity] = useState("");
-  const [Validate, setValidate] = useState("");
-  const productId = params.pid; // Captura o ID do produto da URL
-
-  // Carrega os dados do produto existente
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("id", productId)
-        .single();
-
-      if (error) {
-        console.error("Erro ao buscar produto:", error.message);
-      } else {
-        setName(data.name);
-        setDescription(data.description);
-        setQuantity(data.quantity);
-        setValidate(data.expiration);
-      }
-    };
-
-    fetchProduct();
-  }, [productId]);
-
-  return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <ProductForm
-        Name={Name}
-        setName={setName}
-        Description={Description}
-        setDescription={setDescription}
-        Quantity={Quantity}
-        setQuantity={setQuantity}
-        Validate={Validate}
-        setValidate={setValidate}
-        productId={productId} // Passa o ID do produto como prop
+    <div className="d-flex flex-column min-vh-100">
+      <Nav_bar_itens
+        name_nav_bar="Editar Produto"
+        actions={
+          <button type="submit" form="product-form" className="btn btn-primary">
+            Salvar
+          </button>
+        }
       />
+
+      <main
+        id="main-content"
+        className="flex-fill d-flex justify-content-center p-3"
+      >
+        <form
+          id="product-form"
+          onSubmit={handleSubmit}
+          noValidate
+          className={form_style.form}
+        >
+          {formError && (
+            <div className="alert alert-danger" role="alert">
+              {formError}
+            </div>
+          )}
+          {success && (
+            <div className="alert alert-success" role="status">
+              {success}
+            </div>
+          )}
+
+          <div className="mb-3">
+            <label htmlFor="product-name" className="form-label">
+              Nome
+            </label>
+            <input
+              id="product-name"
+              type="text"
+              className="form-control"
+              value={name}
+              onChange={(e) => handleChange(e, setName)}
+              aria-invalid={nameError ? "true" : "false"}
+              aria-describedby={nameError ? "product-name-error" : undefined}
+            />
+            {nameError && (
+              <p id="product-name-error" className="text-danger small mt-1 mb-0">
+                {nameError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="product-description" className="form-label">
+              Descrição
+            </label>
+            <input
+              id="product-description"
+              type="text"
+              className="form-control"
+              value={description}
+              onChange={(e) => handleChange(e, setDescription)}
+              aria-invalid={descriptionError ? "true" : "false"}
+              aria-describedby={
+                descriptionError ? "product-description-error" : undefined
+              }
+            />
+            {descriptionError && (
+              <p
+                id="product-description-error"
+                className="text-danger small mt-1 mb-0"
+              >
+                {descriptionError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="product-quantity" className="form-label">
+              Quantidade
+            </label>
+            <input
+              id="product-quantity"
+              type="number"
+              min="0"
+              className="form-control"
+              value={quantity}
+              onChange={(e) => handleChange(e, setQuantity)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="product-validity" className="form-label">
+              Validade
+            </label>
+            <input
+              id="product-validity"
+              type="date"
+              className="form-control"
+              value={validate}
+              onChange={(e) => handleChange(e, setValidate)}
+              aria-invalid={validateError ? "true" : "false"}
+              aria-describedby={
+                validateError ? "product-validity-error" : undefined
+              }
+            />
+            {validateError && (
+              <p
+                id="product-validity-error"
+                className="text-danger small mt-1 mb-0"
+              >
+                {validateError}
+              </p>
+            )}
+          </div>
+        </form>
+      </main>
     </div>
   );
 }

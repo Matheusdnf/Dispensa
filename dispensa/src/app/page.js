@@ -1,53 +1,65 @@
-"use client";
 import { Footer } from "./components/footer";
 import { Navbar } from "./components/navbar";
 import style from "@/app/style/home.module.css";
 import Link from "next/link";
+
+const beneficios = [
+  {
+    titulo: "Organize seus alimentos",
+    texto:
+      "Cadastre o que você tem em casa e nunca mais perca o controle do seu estoque.",
+  },
+  {
+    titulo: "Compartilhe despensas",
+    texto:
+      "Convide outras pessoas para gerenciar a mesma despensa em conjunto.",
+  },
+  {
+    titulo: "Acompanhe a validade",
+    texto: "Registre as datas de validade e evite o desperdício de comida.",
+  },
+];
+
 export default function Home() {
   return (
-    <div>
-      <Navbar text={"Dispensa Compartilhada"} />
-      <div className=" d-flex flex-column justify-content-center  text-center">
-        <h1 className={` ${style.custom_spacing}`}> Bem Vindo !!</h1>
-        <div className="container-fluid">
-          <span className={` ${style.logo}`}>
-            <img
-              src="/img/Compartilhado.png"
-              alt="Logo"
-              width="50"
-              height="50"
-              className="d-inline-block me-2"
-            />
-            <span style={{ position: "relative", top: "-2px" }}>
-              Dispensa Compartilhada
-            </span>
-          </span>
-        </div>
-        <div className={` ${style.box}`}>
-          <span className={` ${style.span}`}>
-            Esse projeto trata-se de uma Dispensa, a qual é possível definir
-            caractéristicas dela e personalizá-lá, além de adicionar produtos
-            diversos a mesma, e assim ter um controle daquilo que se tem
-            estocado no recinto em questão.
-          </span>
-        </div>
-        <div className={` ${style.button}`}>
-          <Link
-            href={"/auth/register"}
-            type="button"
-            className="btn btn-outline-primary"
-          >
-            Criar Uma Conta
-          </Link>
-          <Link
-            href={"/auth/login"}
-            type="button"
-            className="btn btn-outline-primary"
-          >
-            Logar
-          </Link>
-        </div>
-      </div>
+    <div className="d-flex flex-column min-vh-100">
+      <Navbar
+        text="Despensa Virtual"
+        actions={
+          <>
+            <Link href="/auth/register" className="btn btn-outline-primary">
+              Criar conta
+            </Link>
+            <Link href="/auth/login" className="btn btn-primary">
+              Fazer login
+            </Link>
+          </>
+        }
+      />
+
+      <main id="main-content" className="flex-fill">
+        <section className={style.hero}>
+          <h1 className={style.hero_title}>Sua despensa, sempre organizada</h1>
+          <p className={style.hero_text}>
+            A Despensa Virtual é a melhor maneira de organizar seus alimentos,
+            controlar o que você tem em casa e compartilhar com quem você quiser.
+          </p>
+        </section>
+
+        <section className="container pb-5">
+          <ul className="row g-4 list-unstyled m-0">
+            {beneficios.map((b) => (
+              <li key={b.titulo} className="col-12 col-md-4">
+                <div className={style.card}>
+                  <h2 className="h5">{b.titulo}</h2>
+                  <p className="m-0 text-muted">{b.texto}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </main>
+
       <Footer />
     </div>
   );
