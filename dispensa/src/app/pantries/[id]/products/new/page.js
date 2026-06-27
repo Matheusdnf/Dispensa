@@ -1,234 +1,217 @@
 "use client";
-import { handleChange, validate_Date } from "@/app/lib/validations";
-import { validate_name } from "@/app/lib/validations";
+import { handleChange, validate_name, validate_Date } from "@/app/lib/validations";
 import { useState } from "react";
 import { createProduct } from "@/app/lib/products";
 import { useRouter, useParams } from "next/navigation";
+import { Nav_bar_itens } from "@/app/components/navbar";
+import form_style from "@/app/style/form.module.css";
 
-export function ProductForm({
-  Name,
-  setName,
-  Description,
-  setDescription,
-  Validate,
-  setValidate,
-  image,
-  setImage,
-  Quantity,
-  setQuantity,
-}) {
-  const [NameError, setNameError] = useState("");
-  const [DescriptionError, setDescriptionError] = useState("");
-  const [ValidateError, setValidateError] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
-  const [successmensage, setsuccessmensage] = useState("");
-  const router = useRouter();
+export default function NewProductPage() {
   const { id: pantryId } = useParams();
+  const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [validate, setValidate] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [validateError, setValidateError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    setImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError("");
 
     let hasError = false;
-
-    if (!validate_name(Name)) {
-      setNameError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(name)) {
+      setNameError("O nome deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setNameError("");
     }
-
-    if (!validate_name(Description)) {
-      setDescriptionError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 3 Letras e no máximo 30</li>
-          </ul>
-        </div>
-      );
+    if (!validate_name(description)) {
+      setDescriptionError("A descrição deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setDescriptionError("");
     }
-
-    if (!validate_Date(Validate)) {
-      setValidateError(
-        <div>
-          <ul>
-            <li>Digite Uma Data Válida</li>
-          </ul>
-        </div>
-      );
+    if (!validate_Date(validate)) {
+      setValidateError("Informe uma data de validade válida.");
       hasError = true;
     } else {
       setValidateError("");
     }
+    if (hasError) return;
 
-    if (!hasError) {
-      const response = await createProduct(
-        Name,
-        Description,
-        image,
-        Quantity,
-        pantryId,
-        Validate,
-        null
-      );
-
-      if (response.error) {
-        console.log("Erro ao cadastrar produto", response.error);
-      } else {
-        console.log("Produto cadastrado com sucesso");
-      }
-
-      console.log("Formulário enviado com sucesso!", {
-        Name,
-        Description,
-        Validate,
-        image,
-        Quantity,
-      });
-      setsuccessmensage("Cadastro Realizado com Sucesso!");
-      setTimeout(() => {
-        setsuccessmensage("");
-        router.push(`/pantries/${pantryId}/products`);
-      }, 2000);
+    const response = await createProduct(
+      name,
+      description,
+      image,
+      quantity,
+      pantryId,
+      validate
+    );
+    if (response.error) {
+      setFormError(response.error);
+      return;
     }
+    setSuccess("Produto cadastrado com sucesso!");
+    setTimeout(() => router.push(`/pantries/${pantryId}/products`), 1200);
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <h1>Cadastrar Produto</h1>
-        <div>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control w-100"
-              placeholder="Nome"
-              onChange={(e) => handleChange(e, setName)}
-              value={Name}
-            />
-            {NameError && <div className="text-danger">{NameError}</div>}
-          </div>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control w-100"
-              placeholder="Descrição"
-              onChange={(e) => handleChange(e, setDescription)}
-              value={Description}
-            />
-            {DescriptionError && (
-              <div className="text-danger">{DescriptionError}</div>
-            )}
-          </div>
-          <div className="input-group mb-3">
-            <input
-              type="number"
-              className="form-control w-100"
-              placeholder="Quantidade"
-              onChange={(e) => handleChange(e, setQuantity)}
-              value={Quantity}
-            />
-          </div>
-          <div className="col-md-5">
-            <label htmlFor="imageUpload" className="form-label">
-              Imagem:
+    <div className="d-flex flex-column min-vh-100">
+      <Nav_bar_itens
+        name_nav_bar="Adicionar Produto"
+        actions={
+          <button type="submit" form="product-form" className="btn btn-primary">
+            Salvar
+          </button>
+        }
+      />
+
+      <main
+        id="main-content"
+        className="flex-fill d-flex justify-content-center p-3"
+      >
+        <form
+          id="product-form"
+          onSubmit={handleSubmit}
+          noValidate
+          className={form_style.form}
+        >
+          {formError && (
+            <div className="alert alert-danger" role="alert">
+              {formError}
+            </div>
+          )}
+          {success && (
+            <div className="alert alert-success" role="status">
+              {success}
+            </div>
+          )}
+
+          <div className="mb-3">
+            <label htmlFor="product-name" className="form-label">
+              Nome
             </label>
             <input
+              id="product-name"
+              type="text"
+              className="form-control"
+              value={name}
+              onChange={(e) => handleChange(e, setName)}
+              aria-invalid={nameError ? "true" : "false"}
+              aria-describedby={nameError ? "product-name-error" : undefined}
+            />
+            {nameError && (
+              <p id="product-name-error" className="text-danger small mt-1 mb-0">
+                {nameError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="product-description" className="form-label">
+              Descrição
+            </label>
+            <input
+              id="product-description"
+              type="text"
+              className="form-control"
+              value={description}
+              onChange={(e) => handleChange(e, setDescription)}
+              aria-invalid={descriptionError ? "true" : "false"}
+              aria-describedby={
+                descriptionError ? "product-description-error" : undefined
+              }
+            />
+            {descriptionError && (
+              <p
+                id="product-description-error"
+                className="text-danger small mt-1 mb-0"
+              >
+                {descriptionError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="product-quantity" className="form-label">
+              Quantidade
+            </label>
+            <input
+              id="product-quantity"
+              type="number"
+              min="0"
+              className="form-control"
+              value={quantity}
+              onChange={(e) => handleChange(e, setQuantity)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="product-validity" className="form-label">
+              Validade
+            </label>
+            <input
+              id="product-validity"
+              type="date"
+              className="form-control"
+              value={validate}
+              onChange={(e) => handleChange(e, setValidate)}
+              aria-invalid={validateError ? "true" : "false"}
+              aria-describedby={
+                validateError ? "product-validity-error" : undefined
+              }
+            />
+            {validateError && (
+              <p
+                id="product-validity-error"
+                className="text-danger small mt-1 mb-0"
+              >
+                {validateError}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="product-image" className="form-label">
+              Anexar imagem
+            </label>
+            <input
+              id="product-image"
               type="file"
-              id="imageUpload"
-              name="image"
               accept="image/*"
               className="form-control"
               onChange={handleFileChange}
             />
-
             {imagePreview && (
-              <div className="d-flex justify-content-center mt-3">
+              <div className="mt-3 text-center">
                 <img
                   src={imagePreview}
-                  alt="Imagem selecionada"
-                  style={{
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                  className="img-fluid"
+                  alt="Pré-visualização da imagem do produto"
+                  className={form_style.preview}
                 />
               </div>
             )}
           </div>
-          <div className="input-group mb-3">
-            <input
-              type="Date"
-              className="form-control w-100"
-              placeholder="Validade"
-              onChange={(e) => handleChange(e, setValidate)}
-              value={Validate}
-            />
-            <div>
-              {ValidateError && (
-                <div className="text-danger">{ValidateError}</div>
-              )}
-            </div>
-          </div>
-          <div className="d-flex justify-content-center align-items-center mt-3">
-            <button className="btn  btn-primary mt-3" type="submit">
-              Cadastrar
-            </button>
-          </div>
-        </div>
-        {successmensage && (
-          <div className="alert alert-success mt-3">{successmensage}</div>
-        )}
-      </form>
-    </div>
-  );
-}
-
-export default function Login_Products() {
-  const [Name, setName] = useState("");
-  const [Description, setDescription] = useState("");
-  const [Validate, setValidate] = useState("");
-  const [image, setImage] = useState(null);
-  const [Quantity, setQuantity] = useState("");
-
-  return (
-    <div>
-      <ProductForm
-        Name={Name}
-        setName={setName}
-        Description={Description}
-        setDescription={setDescription}
-        Validate={Validate}
-        setValidate={setValidate}
-        image={image}
-        setImage={setImage}
-        Quantity={Quantity}
-        setQuantity={setQuantity}
-      />
+        </form>
+      </main>
     </div>
   );
 }

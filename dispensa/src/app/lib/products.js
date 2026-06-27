@@ -69,8 +69,3 @@ export async function deleteProduct(id) {
   }
   return { success: true };
 }
-
-// Compatibilidade com uma página de edição antiga que importa editProducts.
-export async function editProducts() {
-  return { error: "Operação não suportada." };
-}

@@ -1,45 +1,75 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // Importe o hook useParams
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { ShowCard } from "@/app/components/showCard";
 import { Nav_bar_itens } from "@/app/components/navbar";
-import { Dropdown_Products } from "@/app/components/dropdown";
 import { fetchProducts } from "@/app/lib/products";
+import { fetchPantry } from "@/app/lib/pantries";
 
-export default function Page_products() {
-  const [products, setProducts] = useState([]); // Estado para armazenar os produtos
-  const [loading, setLoading] = useState(true); // Estado para carregamento
-  const [error, setError] = useState(null); // Estado para erros
-
-  const params = useParams(); // Acessa os parâmetros da rota
-  const { id } = params; // Extrai o `id` da URL
+export default function ProductsPage() {
+  const { id } = useParams();
+  const [products, setProducts] = useState([]);
+  const [pantryName, setPantryName] = useState("Despensa");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [shareMessage, setShareMessage] = useState("");
 
   useEffect(() => {
-    const getProducts = async () => {
-      try {
-        // Busca os produtos da despensa selecionada (a API valida a sessão)
-        const data = await fetchProducts(id);
-        setProducts(data); // Atualiza o estado com os dados obtidos
-      } catch (error) {
-        setError(error.message); // Define o erro, se houver
-      } finally {
-        setLoading(false); // Finaliza o carregamento
-      }
-    };
-
-    getProducts(); // Chama a função para buscar os produtos
-  }, [id]); // Executa o useEffect sempre que o `id` mudar
-
-  if (loading) return <p>Carregando...</p>; // Exibe um indicador de carregamento
-  if (error) return <p>Erro: {error}</p>; // Exibe uma mensagem de erro
+    fetchPantry(id).then((p) => {
+      if (p?.name) setPantryName(p.name);
+    });
+    fetchProducts(id)
+      .then(setProducts)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [id]);
 
   return (
-    <div>
+    <div className="d-flex flex-column min-vh-100">
       <Nav_bar_itens
-        Dropdown={<Dropdown_Products />}
-        name_nav_bar={"Sessão de Produtos"}
+        name_nav_bar={pantryName}
+        actions={
+          <>
+            <Link
+              href={`/pantries/${id}/products/new`}
+              className="btn btn-primary"
+            >
+              Adicionar produto
+            </Link>
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() =>
+                setShareMessage(
+                  "O compartilhamento de despensas estará disponível em breve."
+                )
+              }
+            >
+              Adicionar pessoa
+            </button>
+          </>
+        }
       />
-      <ShowCard itens={products} ismodal={true} />
+
+      <main id="main-content" className="flex-fill">
+        {shareMessage && (
+          <div className="alert alert-info m-3" role="status">
+            {shareMessage}
+          </div>
+        )}
+        {loading ? (
+          <p className="p-4" role="status">
+            Carregando…
+          </p>
+        ) : error ? (
+          <p className="p-4 text-danger" role="alert">
+            Erro: {error}
+          </p>
+        ) : (
+          <ShowCard itens={products} ismodal={true} />
+        )}
+      </main>
     </div>
   );
 }
