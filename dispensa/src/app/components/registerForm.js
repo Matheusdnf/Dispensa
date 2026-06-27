@@ -1,5 +1,4 @@
 "use client";
-
 import {
   validateEmail,
   validatePassword,
@@ -8,7 +7,8 @@ import {
 } from "@/app/lib/validations";
 import { useState } from "react";
 import { signupUser } from "../lib/signupUser";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 export function RegisterForm({
   email,
   setEmail,
@@ -16,177 +16,149 @@ export function RegisterForm({
   setPassword,
   username,
   setUsername,
-  confirmPassword,
-  setConfirmPassword,
 }) {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [hidePassword, setHidePassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setHidePassword(!hidePassword);
-  };
+  const [formError, setFormError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError("");
 
     let hasError = false;
-
-    if (!validateEmail(email)) {
-      setEmailError(
-        <div>
-          <ul>
-            <li>Email inválido</li>
-          </ul>
-        </div>
-      );
-      hasError = true;
-    } else {
-      setEmailError("");
-    }
     if (!validate_name(username)) {
-      setUsernameError(
-        <div>
-          <ul>
-            <li>Ter No mínimo 3 e no máximo 30 letra</li>
-            <li>Não pode Incluir caracteres especiais [!@#$%^&*]</li>
-          </ul>
-        </div>
-      );
+      setUsernameError("O nome deve ter entre 3 e 30 caracteres.");
       hasError = true;
     } else {
       setUsernameError("");
     }
 
+    if (!validateEmail(email)) {
+      setEmailError("Informe um e-mail válido.");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+
     if (!validatePassword(password)) {
       setPasswordError(
-        <div>
-          <ul>
-            <li>Ter no mínimo 6 caracteres</li>
-            <li>Incluir um número [1,2,3]</li>
-            <li>Incluir caracteres especiais [!@#$%^&*]</li>
-            <li>Incluir uma letra</li>
-            <li>Ter letra Maiúscula</li>
-          </ul>
-        </div>
+        "A senha deve ter ao menos 6 caracteres, incluindo maiúscula, minúscula, número e caractere especial."
       );
       hasError = true;
     } else {
       setPasswordError("");
     }
 
-    if (password !== confirmPassword) {
-      setConfirmPasswordError(
-        <div>
-          <ul>
-            <li>As senhas Não Correspondem!</li>
-          </ul>
-        </div>
-      );
-      hasError = true;
-    } else {
-      setConfirmPasswordError("");
-    }
+    if (hasError) return;
 
-    if (!hasError) {
-      const response = await signupUser(email, password, username);
-      if (response.error) {
-        console.log("Erro no registro. ", response.error);
-      } else {
-        console.log("Registro realizado com sucesso!", response.data);
-      }
+    const response = await signupUser(email, password, username);
+    if (response.error) {
+      setFormError(response.error);
+      return;
     }
+    router.push("/pantries");
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit}>
-        <h1>Cadastrar</h1>
-        <div>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control w-100"
-              placeholder="Email"
-              onChange={(e) => handleChange(e, setEmail)}
-              value={email}
-            />
-            {emailError && <div className="text-danger">{emailError}</div>}
-          </div>
+    <form onSubmit={handleSubmit} noValidate>
+      <h1 className="h3 mb-4">Registrar</h1>
 
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control w-100"
-              placeholder="Nome de usuário"
-              onChange={(e) => handleChange(e, setUsername)}
-              value={username}
-            />
-            {usernameError && (
-              <div className="text-danger">{usernameError}</div>
-            )}
-          </div>
-
-          <div className="d-flex mb-3">
-            <input
-              type={hidePassword ? "text" : "password"}
-              className="form-control w-100"
-              placeholder="Senha"
-              onChange={(e) => handleChange(e, setPassword)}
-              value={password}
-            />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              style={{
-                border: "none",
-                borderRadius: "5px",
-                marginLeft: "8px",
-                padding: "6px 12px",
-                cursor: "pointer",
-              }}
-            >
-              {hidePassword ? (
-                <img
-                  src="/img/olho-aberto.png"
-                  alt="Ocultar senha"
-                  width="24"
-                  height="24"
-                />
-              ) : (
-                <img
-                  src="/img/olho.png"
-                  alt="Exibir senha"
-                  width="24"
-                  height="24"
-                />
-              )}
-            </button>
-          </div>
-          {passwordError && <div className="text-danger">{passwordError}</div>}
-          <div className="input-group mb-3">
-            <input
-              type={hidePassword ? "text" : "password"}
-              className="form-control w-100"
-              placeholder="Confirmar senha"
-              onChange={(e) => handleChange(e, setConfirmPassword)}
-              value={confirmPassword}
-            />
-            {confirmPasswordError && (
-              <div className="text-danger">{confirmPasswordError}</div>
-            )}
-          </div>
-
-          <div className="d-flex justify-content-between align-items-center mt-3">
-            <Link href="../auth/login">Já tem uma conta? Entrar</Link>
-            <button className="btn btn-primary mt-3" type="submit">
-              Cadastrar
-            </button>
-          </div>
+      {formError && (
+        <div className="alert alert-danger" role="alert">
+          {formError}
         </div>
-      </form>
-    </div>
+      )}
+
+      <div className="mb-3">
+        <label htmlFor="register-name" className="form-label">
+          Nome
+        </label>
+        <input
+          id="register-name"
+          type="text"
+          autoComplete="name"
+          className="form-control"
+          value={username}
+          onChange={(e) => handleChange(e, setUsername)}
+          aria-invalid={usernameError ? "true" : "false"}
+          aria-describedby={usernameError ? "register-name-error" : undefined}
+        />
+        {usernameError && (
+          <p id="register-name-error" className="text-danger small mt-1 mb-0">
+            {usernameError}
+          </p>
+        )}
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="register-email" className="form-label">
+          E-mail
+        </label>
+        <input
+          id="register-email"
+          type="email"
+          autoComplete="email"
+          className="form-control"
+          value={email}
+          onChange={(e) => handleChange(e, setEmail)}
+          aria-invalid={emailError ? "true" : "false"}
+          aria-describedby={emailError ? "register-email-error" : undefined}
+        />
+        {emailError && (
+          <p id="register-email-error" className="text-danger small mt-1 mb-0">
+            {emailError}
+          </p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="register-password" className="form-label">
+          Senha
+        </label>
+        <div className="input-group">
+          <input
+            id="register-password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            className="form-control"
+            value={password}
+            onChange={(e) => handleChange(e, setPassword)}
+            aria-invalid={passwordError ? "true" : "false"}
+            aria-describedby={
+              passwordError ? "register-password-error" : undefined
+            }
+          />
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-pressed={showPassword}
+            aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+          >
+            <img
+              src={showPassword ? "/img/olho-aberto.png" : "/img/olho.png"}
+              alt=""
+              width="20"
+              height="20"
+            />
+          </button>
+        </div>
+        {passwordError && (
+          <p
+            id="register-password-error"
+            className="text-danger small mt-1 mb-0"
+          >
+            {passwordError}
+          </p>
+        )}
+      </div>
+
+      <button type="submit" className="btn btn-primary w-100">
+        Registrar
+      </button>
+    </form>
   );
 }
