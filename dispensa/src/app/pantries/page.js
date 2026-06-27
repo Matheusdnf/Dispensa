@@ -1,31 +1,29 @@
 "use client";
 import { ShowCard } from "@/app/components/showCard";
 import { Nav_bar_itens } from "@/app/components/navbar";
-import { fetchPantries } from "@/app/lib/pantries"
+import { fetchPantries } from "@/app/lib/pantries";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Dropdown_Pentries, Dropdown_Products } from "../components/dropdown";
-import { supabase } from "@/app/lib/supabase/SupabaseClient";
 export default function scream_pantry() {
   const [pantries, setPantries] = useState([]);
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getPantries = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
       try {
-        const data = await fetchPantries(user.id); 
-        setPantries(data); 
+        const data = await fetchPantries();
+        setPantries(data);
       } catch (error) {
         setError(error.message);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
-    getPantries(); 
-  }, []); 
+    getPantries();
+  }, []);
 
   return (
     <div>

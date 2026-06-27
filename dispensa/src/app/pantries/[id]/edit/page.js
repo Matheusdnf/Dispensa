@@ -1,10 +1,9 @@
 "use client";
 import { handleChange } from "@/app/lib/validations/page";
 import { validate_name } from "@/app/lib/validations/page";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { editPantry } from "@/app/lib/pantries";
-import { supabase } from "@/app/lib/supabase/SupabaseClient";
 import { use } from "react";
 import { Navbar } from "@/app/components/navbar";
 
@@ -21,22 +20,7 @@ export function PantryForm({
   const [DescriptionError, setDescriptionError] = useState("");
   const [successmensage, setsuccessmensage] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
-  const [userId, setUserId] = useState(null); // Estado para armazenar o ID do usuário logado
   const router = useRouter();
-
-  // Função para obter o ID do usuário logado
-  useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -83,14 +67,13 @@ export function PantryForm({
       setDescriptionError("");
     }
 
-    if (!hasError && userId) {
+    if (!hasError) {
       try {
         const { data, error } = await editPantry(
           pantryId,
           Name,
           Description,
-          image,
-          userId
+          image
         );
 
         if (error) {
