@@ -1,15 +1,21 @@
 "use client";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { signOut } from "@/app/lib/auth";
 
 export default function Logout() {
+  const router = useRouter();
+
   useEffect(() => {
-    signOut();
-  }, []);
+    signOut().then(() => {
+      router.replace("/");
+      router.refresh();
+    });
+  }, [router]);
 
   return (
-    <div>
-      <h1>Deslogado com sucesso</h1>
-    </div>
+    <p className="p-4" role="status">
+      Saindo…
+    </p>
   );
 }

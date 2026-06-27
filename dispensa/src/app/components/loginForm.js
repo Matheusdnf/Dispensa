@@ -8,7 +8,9 @@ import { useState } from "react";
 import { signinUser } from "@/app/lib/signinUser";
 import { useRouter } from "next/navigation";
 
-export function LoginForm({ email, setEmail, password, setPassword }) {
+export function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [formError, setFormError] = useState("");

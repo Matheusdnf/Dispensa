@@ -9,14 +9,10 @@ import { useState } from "react";
 import { signupUser } from "../lib/signupUser";
 import { useRouter } from "next/navigation";
 
-export function RegisterForm({
-  email,
-  setEmail,
-  password,
-  setPassword,
-  username,
-  setUsername,
-}) {
+export function RegisterForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [usernameError, setUsernameError] = useState("");
