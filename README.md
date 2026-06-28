@@ -1,8 +1,8 @@
 # Despensa Compartilhada
 
 Aplicação web para organizar alimentos em **despensas virtuais**: cadastre suas
-despensas, registre os produtos que tem em casa (com quantidade e validade) e,
-futuramente, compartilhe uma despensa com outras pessoas.
+despensas, registre os produtos que tem em casa (com quantidade e validade) e
+compartilhe uma despensa com outras pessoas.
 
 Projeto da disciplina de Programação Web (PWEB).
 
@@ -11,6 +11,8 @@ Projeto da disciplina de Programação Web (PWEB).
 - Cadastro e login de usuários (sessão por cookie, senha com hash)
 - Criação, edição e exclusão de **despensas**
 - Cadastro, edição e exclusão de **produtos** dentro de cada despensa
+- **Compartilhamento de despensas**: convide pessoas por e-mail para acessar
+  uma despensa e gerenciar seus produtos em conjunto
 - Upload de imagens para despensas e produtos
 - Interface responsiva e com foco em **acessibilidade**
 
@@ -107,6 +109,18 @@ dispensa/
    maiúscula, minúscula, número e caractere especial (ex.: `Senha1!`).
 2. Você é levado para **Minhas Despensas**.
 3. Crie uma despensa e, dentro dela, adicione produtos.
+4. Para compartilhar, abra a despensa e clique em **Adicionar pessoa**: informe
+   o e-mail de outra conta já cadastrada para conceder acesso.
+
+### Compartilhamento
+
+O **dono** da despensa convida outras pessoas pelo e-mail da conta delas. Quem
+recebe o convite passa a ver a despensa na própria lista (marcada com o selo
+**"Compartilhada"**) e pode **adicionar, editar e excluir produtos**.
+
+Continuam exclusivos do dono: **renomear/excluir a despensa** e **gerenciar quem
+tem acesso** (adicionar ou remover pessoas). O botão "Adicionar pessoa" só
+aparece para o dono.
 
 ## Documentação
 
