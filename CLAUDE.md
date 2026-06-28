@@ -42,13 +42,18 @@ Ambos são ignorados pelo git.
   - `api/auth/{register,login,logout,me}`
   - `api/pantries` e `api/pantries/[id]`
   - `api/pantries/[id]/products` e `api/products/[pid]`
+  - `api/pantries/[id]/shares` e `api/pantries/[id]/shares/[userId]`
+    (compartilhamento — só o dono acessa)
 - **Camada de servidor** (`src/app/lib/`):
   - `db/index.js` — conexão SQLite (singleton) e schema
   - `session.js` — cria/lê/destroi a sessão por cookie (HMAC)
+  - `access.js` — autorização das despensas: `getPantryAccess` (dono **ou**
+    convidado) e `getOwnedPantry` (só dono). Reutilizado por todas as rotas.
   - `upload.js` — grava/remove imagens em `public/uploads`
-- **Clientes** (`src/app/lib/`): `pantries.js`, `products.js`, `signinUser.js`,
-  `signupUser.js`, `auth.js` — fazem `fetch` para a API. Mantêm assinaturas
-  tolerantes (argumentos extras antigos, como `userId`, são ignorados).
+- **Clientes** (`src/app/lib/`): `pantries.js`, `products.js`, `shares.js`,
+  `signinUser.js`, `signupUser.js`, `auth.js` — fazem `fetch` para a API.
+  Mantêm assinaturas tolerantes (argumentos extras antigos, como `userId`,
+  são ignorados).
 - **Páginas** (`src/app/**/page.js`) e **componentes** (`src/app/components/`).
 - **Estilos**: `src/app/globals.css` (tokens de design e acessibilidade) +
   CSS Modules em `src/app/style/`.
@@ -58,8 +63,17 @@ Ambos são ignorados pelo git.
 - `users(id, email, username, password, created_at)`
 - `pantries(id, name, description, image, user_id, created_at)`
 - `products(id, name, description, quantity, pantry_id, expiration, image, created_at)`
+- `pantry_shares(id, pantry_id, user_id, created_at)` — compartilhamento de
+  despensa, com `UNIQUE (pantry_id, user_id)`
 
-Chaves estrangeiras com `ON DELETE CASCADE` (apagar despensa remove produtos).
+Chaves estrangeiras com `ON DELETE CASCADE` (apagar despensa remove produtos e
+compartilhamentos; apagar usuário remove suas despensas e seus acessos).
+
+**Compartilhamento:** o dono (`pantries.user_id`) convida outra pessoa por
+e-mail; cada convite vira uma linha em `pantry_shares`. O convidado (membro) vê a
+despensa na sua lista e tem **acesso total aos produtos** (criar/editar/excluir),
+mas **não** pode renomear/excluir a despensa nem gerenciar pessoas — isso é
+exclusivo do dono.
 
 ## Convenções
 

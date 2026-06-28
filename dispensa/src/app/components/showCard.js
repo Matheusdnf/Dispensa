@@ -23,7 +23,12 @@ export function ShowCard({ itens, ismodal, button_pantries }) {
               }}
             />
             <div className="card-body d-flex flex-column">
-              <h2 className="card-title h5">{p.name}</h2>
+              <h2 className="card-title h5 d-flex align-items-center gap-2">
+                {p.name}
+                {p.shared ? (
+                  <span className="badge text-bg-secondary">Compartilhada</span>
+                ) : null}
+              </h2>
               {p.description && <p className="card-text">{p.description}</p>}
               {p.quantity != null && (
                 <p className="card-text text-muted mb-1">

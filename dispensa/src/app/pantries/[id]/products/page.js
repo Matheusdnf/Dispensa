@@ -6,24 +6,29 @@ import { ShowCard } from "@/app/components/showCard";
 import { Nav_bar_itens } from "@/app/components/navbar";
 import { fetchProducts } from "@/app/lib/products";
 import { fetchPantry } from "@/app/lib/pantries";
+import { useAuth } from "@/app/lib/auth";
 
 export default function ProductsPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [pantryName, setPantryName] = useState("Despensa");
+  const [ownerId, setOwnerId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [shareMessage, setShareMessage] = useState("");
 
   useEffect(() => {
     fetchPantry(id).then((p) => {
       if (p?.name) setPantryName(p.name);
+      if (p?.user_id) setOwnerId(p.user_id);
     });
     fetchProducts(id)
       .then(setProducts)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [id]);
+
+  const isOwner = user && ownerId && user.id === ownerId;
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -39,27 +44,19 @@ export default function ProductsPage() {
             >
               Adicionar produto
             </Link>
-            <button
-              type="button"
-              className="btn btn-outline-primary"
-              onClick={() =>
-                setShareMessage(
-                  "O compartilhamento de despensas estará disponível em breve."
-                )
-              }
-            >
-              Adicionar pessoa
-            </button>
+            {isOwner && (
+              <Link
+                href={`/pantries/${id}/share`}
+                className="btn btn-outline-primary"
+              >
+                Adicionar pessoa
+              </Link>
+            )}
           </>
         }
       />
 
       <main id="main-content" className="flex-fill">
-        {shareMessage && (
-          <div className="alert alert-info m-3" role="status">
-            {shareMessage}
-          </div>
-        )}
         {loading ? (
           <p className="p-4" role="status">
             Carregando…

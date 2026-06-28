@@ -1,27 +1,16 @@
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
-import { getDb } from "@/app/lib/db";
-import { getSessionUserId } from "@/app/lib/session";
 import { saveUpload } from "@/app/lib/upload";
+import { getPantryAccess } from "@/app/lib/access";
 
-// Confere se a despensa existe e pertence ao usuário logado.
-async function ownsPantry(db, pantryId) {
-  const userId = await getSessionUserId();
-  if (!userId) return { error: "Não autenticado.", status: 401 };
-  const pantry = db.prepare("SELECT * FROM pantries WHERE id = ?").get(pantryId);
-  if (!pantry) return { error: "Despensa não encontrada.", status: 404 };
-  if (pantry.user_id !== userId) return { error: "Acesso negado.", status: 403 };
-  return { pantry };
-}
-
-// Lista os produtos de uma despensa.
+// Lista os produtos de uma despensa (dono ou convidado).
 export async function GET(_request, { params }) {
   const { id } = await params;
-  const db = getDb();
-  const check = await ownsPantry(db, id);
+  const check = await getPantryAccess(id);
   if (check.error) {
     return NextResponse.json({ error: check.error }, { status: check.status });
   }
+  const { db } = check;
 
   const products = db
     .prepare("SELECT * FROM products WHERE pantry_id = ? ORDER BY created_at DESC")
@@ -29,14 +18,14 @@ export async function GET(_request, { params }) {
   return NextResponse.json(products);
 }
 
-// Cria um produto dentro da despensa.
+// Cria um produto dentro da despensa (dono ou convidado).
 export async function POST(request, { params }) {
   const { id } = await params;
-  const db = getDb();
-  const check = await ownsPantry(db, id);
+  const check = await getPantryAccess(id);
   if (check.error) {
     return NextResponse.json({ error: check.error }, { status: check.status });
   }
+  const { db } = check;
 
   const form = await request.formData();
   const name = form.get("name");

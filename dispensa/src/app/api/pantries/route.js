@@ -4,7 +4,8 @@ import { getDb } from "@/app/lib/db";
 import { getSessionUserId } from "@/app/lib/session";
 import { saveUpload } from "@/app/lib/upload";
 
-// Lista as despensas do usuário logado.
+// Lista as despensas do usuário logado: as próprias e as compartilhadas com ele.
+// A coluna `shared` (0/1) permite à UI marcar as que foram compartilhadas.
 export async function GET() {
   const userId = await getSessionUserId();
   if (!userId) {
@@ -13,8 +14,14 @@ export async function GET() {
 
   const db = getDb();
   const pantries = db
-    .prepare("SELECT * FROM pantries WHERE user_id = ? ORDER BY created_at DESC")
-    .all(userId);
+    .prepare(
+      `SELECT p.*, 0 AS shared FROM pantries p WHERE p.user_id = ?
+       UNION
+       SELECT p.*, 1 AS shared FROM pantries p
+         JOIN pantry_shares s ON s.pantry_id = p.id WHERE s.user_id = ?
+       ORDER BY created_at DESC`
+    )
+    .all(userId, userId);
 
   return NextResponse.json(pantries);
 }

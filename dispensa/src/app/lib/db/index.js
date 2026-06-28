@@ -49,6 +49,16 @@ const SCHEMA = `
     created_at  TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (pantry_id) REFERENCES pantries(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE IF NOT EXISTS pantry_shares (
+    id         TEXT PRIMARY KEY,
+    pantry_id  TEXT NOT NULL,
+    user_id    TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (pantry_id, user_id),
+    FOREIGN KEY (pantry_id) REFERENCES pantries(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id)   REFERENCES users(id)    ON DELETE CASCADE
+  );
 `;
 
 function createConnection() {

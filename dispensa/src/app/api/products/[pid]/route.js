@@ -1,23 +1,17 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/app/lib/db";
-import { getSessionUserId } from "@/app/lib/session";
 import { saveUpload, deleteUpload } from "@/app/lib/upload";
+import { getPantryAccess } from "@/app/lib/access";
 
-// Carrega o produto e confere se ele pertence (via despensa) ao usuário logado.
+// Carrega o produto e confere o acesso (dono ou convidado) via despensa.
 async function getOwnedProduct(pid) {
-  const userId = await getSessionUserId();
-  if (!userId) return { error: "Não autenticado.", status: 401 };
-
   const db = getDb();
   const product = db.prepare("SELECT * FROM products WHERE id = ?").get(pid);
   if (!product) return { error: "Produto não encontrado.", status: 404 };
 
-  const pantry = db
-    .prepare("SELECT user_id FROM pantries WHERE id = ?")
-    .get(product.pantry_id);
-  if (!pantry || pantry.user_id !== userId) {
-    return { error: "Acesso negado.", status: 403 };
-  }
+  const access = await getPantryAccess(product.pantry_id);
+  if (access.error) return access;
+
   return { product, db };
 }
 
