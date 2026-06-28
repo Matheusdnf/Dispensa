@@ -1,25 +1,11 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/app/lib/db";
-import { getSessionUserId } from "@/app/lib/session";
 import { saveUpload, deleteUpload } from "@/app/lib/upload";
-
-// Garante que a despensa existe e pertence ao usuário logado.
-async function getOwnedPantry(id) {
-  const userId = await getSessionUserId();
-  if (!userId) return { error: "Não autenticado.", status: 401 };
-
-  const db = getDb();
-  const pantry = db.prepare("SELECT * FROM pantries WHERE id = ?").get(id);
-  if (!pantry) return { error: "Despensa não encontrada.", status: 404 };
-  if (pantry.user_id !== userId) {
-    return { error: "Acesso negado.", status: 403 };
-  }
-  return { pantry, db };
-}
+import { getPantryAccess, getOwnedPantry } from "@/app/lib/access";
 
 export async function GET(_request, { params }) {
   const { id } = await params;
-  const result = await getOwnedPantry(id);
+  // Dono ou convidado pode ver a despensa.
+  const result = await getPantryAccess(id);
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
