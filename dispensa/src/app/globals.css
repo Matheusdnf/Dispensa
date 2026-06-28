@@ -166,6 +166,13 @@ body {
   background-color: var(--accent) !important;
 }
 
+/* Foco dos campos na cor da marca (em vez do azul padrão do Bootstrap) */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 0.2rem rgba(39, 29, 148, 0.15);
+}
+
 /* Acessibilidade: foco de teclado sempre visível e com alto contraste.
    O outline âmbar destaca-se sobre a marca; o halo índigo garante contraste
    também sobre superfícies claras (branco/cinza). */

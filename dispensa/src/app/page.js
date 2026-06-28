@@ -44,19 +44,31 @@ export default async function Home() {
 
       <main id="main-content" className="flex-fill">
         <section className={style.hero}>
-          <h1 className={style.hero_title}>Sua despensa, sempre organizada</h1>
-          <p className={style.hero_text}>
-            A Despensa Virtual é a melhor maneira de organizar seus alimentos,
-            controlar o que você tem em casa e compartilhar com quem você quiser.
-          </p>
+          <div className={style.hero_inner}>
+            <h1 className={style.hero_title}>Sua despensa, sempre organizada</h1>
+            <p className={style.hero_text}>
+              A Despensa Virtual é a melhor maneira de organizar seus alimentos,
+              controlar o que você tem em casa e compartilhar com quem você
+              quiser.
+            </p>
+            <div className={style.hero_actions}>
+              <Link href="/auth/register" className="btn btn-light btn-lg">
+                Criar conta grátis
+              </Link>
+              <Link href="/auth/login" className="btn btn-outline-light btn-lg">
+                Já tenho conta
+              </Link>
+            </div>
+          </div>
         </section>
 
-        <section className="container pb-5">
+        <section className="container py-5">
+          <h2 className={style.section_title}>Como a Despensa Virtual te ajuda</h2>
           <ul className="row g-4 list-unstyled m-0">
             {beneficios.map((b) => (
               <li key={b.titulo} className="col-12 col-md-4">
                 <div className={style.card}>
-                  <h2 className="h5">{b.titulo}</h2>
+                  <h3 className="h5">{b.titulo}</h3>
                   <p className="m-0 text-muted">{b.texto}</p>
                 </div>
               </li>

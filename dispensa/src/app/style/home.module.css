@@ -1,12 +1,16 @@
+/* Banner de largura total (não mais um card flutuante) */
 .hero {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 4rem 1rem 2.5rem;
+  width: 100%;
+  padding: 5rem 1.5rem 4.5rem;
   text-align: center;
   background: linear-gradient(135deg, var(--brand) 0%, var(--accent-dark) 100%);
   color: var(--on-brand);
-  border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
+}
+
+.hero_inner {
+  max-width: 760px;
+  margin: 0 auto;
 }
 
 .hero_title {
@@ -20,7 +24,23 @@
   font-size: 1.125rem;
   color: var(--on-brand);
   opacity: 0.92;
-  margin: 0;
+  margin: 0 auto 2rem;
+  max-width: 620px;
+}
+
+.hero_actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Título da seção de benefícios */
+.section_title {
+  text-align: center;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 2rem;
 }
 
 .card {
