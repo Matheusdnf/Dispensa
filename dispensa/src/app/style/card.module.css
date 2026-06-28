@@ -1,5 +1,6 @@
 .card {
   border: 1px solid var(--border);
+  border-top: 4px solid var(--accent);
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -10,6 +11,11 @@
 .card:focus-within {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+}
+
+/* Título do card na cor da marca, com leve realce de fundo */
+.card :global(.card-title) {
+  color: var(--brand);
 }
 
 .card_img {

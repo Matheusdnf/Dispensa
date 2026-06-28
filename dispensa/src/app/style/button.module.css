@@ -1,15 +1,14 @@
 .btn_custom {
-  background-color: #271d94;
-  color: white;
+  background-color: var(--brand);
+  color: var(--on-brand);
   border: none;
 }
 
 .btn_custom:hover {
-  background-color: #1d1d69;
+  background-color: var(--brand-dark);
 }
 
 .btn_custom:active,
 .btn_custom:focus {
-  background-color: #354683 !important;
-  box-shadow: none !important;
+  background-color: var(--brand-dark) !important;
 }

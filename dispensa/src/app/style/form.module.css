@@ -3,11 +3,30 @@
   max-width: 560px;
   background: var(--surface);
   border: 1px solid var(--border);
+  border-top: 5px solid var(--accent);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   padding: 2rem;
   margin-top: 1.5rem;
   align-self: flex-start;
+}
+
+/* Rótulos na cor da marca para dar hierarquia ao formulário */
+.form :global(.form-label) {
+  font-weight: 600;
+  color: var(--brand);
+}
+
+/* Campos com leve preenchimento para não "sumirem" no card branco;
+   ao focar, ficam brancos com borda/realce na cor da marca. */
+.form :global(.form-control) {
+  background-color: var(--surface-muted);
+  border-color: var(--border);
+}
+.form :global(.form-control):focus {
+  background-color: var(--surface);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 0.2rem rgba(39, 29, 148, 0.15);
 }
 
 .preview {

@@ -1,8 +1,9 @@
 .footer {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   padding: 10px;
   text-align: center;
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--accent-dark) 100%);
+  color: var(--on-brand);
   position: relative;
   bottom: 0;
   margin-top: 16vh;
@@ -20,8 +21,4 @@
 
 .info_center {
   text-align: center;
-}
-
-.button {
-  background-color: blue;
 }
