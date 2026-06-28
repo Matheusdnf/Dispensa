@@ -5,35 +5,78 @@
  */
 
 :root {
-  /* Marca */
+  /* Marca (índigo) — requisito do projeto */
   --brand: #271d94;
-  --brand-dark: #16114f;
-  --brand-soft: #ece9fb;
+  --brand-dark: #16114f; /* hover/active */
+  --brand-soft: #ece9fb; /* fundo sutil */
+  --on-brand: #ffffff; /* texto sobre a marca */
 
-  /* Superfícies e texto */
+  /* Destaque (teal) */
+  --accent: #0d7373; /* base; texto branco passa AA */
+  --accent-dark: #0a5c5c; /* hover/active */
+  --accent-soft: #e3f4f4; /* fundo sutil */
+  --on-accent: #ffffff;
+
+  /* Superfícies e texto (neutros) */
   --surface: #ffffff;
-  --surface-muted: #f5f4fb;
+  --surface-muted: #f5f4fb; /* fundo da página */
+  --surface-sunken: #eceaf6; /* rodapé e áreas rebaixadas */
   --text: #1a1a2e;
   --text-muted: #4a4a63;
   --border: #d8d7e3;
 
-  /* Estados */
+  /* Estados semânticos */
   --danger: #b3261e;
   --success: #1b5e20;
+  --warning: #8a5a00;
+  --info: #0b5cab;
 
-  /* Forma */
+  /* Foco: âmbar de alto contraste sobre a marca; reforçado por halo índigo */
+  --focus-ring: #ffbf47;
+
+  /* Forma e sombra */
   --radius: 12px;
   --radius-sm: 8px;
   --shadow-sm: 0 1px 3px rgba(26, 26, 46, 0.08);
   --shadow-md: 0 8px 24px rgba(39, 29, 148, 0.12);
+  --shadow-lg: 0 10px 30px rgba(26, 26, 46, 0.18);
 
-  /* Sobrescritas globais do Bootstrap */
+  /* Sobrescritas globais do Bootstrap: ligam os utilitários aos tokens */
   --bs-primary: var(--brand);
   --bs-primary-rgb: 39, 29, 148;
   --bs-body-color: var(--text);
   --bs-link-color: var(--brand);
   --bs-link-hover-color: var(--brand-dark);
   --bs-border-radius: var(--radius-sm);
+
+  /* Estados do Bootstrap apontando para os tokens do projeto.
+     Inclui as variáveis subtle/emphasis usadas por alerts e badges no 5.3. */
+  --bs-secondary: #5b5b73;
+  --bs-secondary-rgb: 91, 91, 115;
+
+  --bs-danger: var(--danger);
+  --bs-danger-rgb: 179, 38, 30;
+  --bs-danger-text-emphasis: #6e1813;
+  --bs-danger-bg-subtle: #f7dddb;
+  --bs-danger-border-subtle: #e8b4b0;
+
+  --bs-success: var(--success);
+  --bs-success-rgb: 27, 94, 32;
+  --bs-success-text-emphasis: #103d15;
+  --bs-success-bg-subtle: #d9e7da;
+  --bs-success-border-subtle: #b3cbb5;
+
+  --bs-warning: var(--warning);
+  --bs-warning-rgb: 138, 90, 0;
+  --bs-warning-text-emphasis: #5c3c00;
+  --bs-warning-bg-subtle: #f5ead1;
+  --bs-warning-border-subtle: #e6d3a6;
+
+  --bs-info: var(--info);
+  --bs-info-rgb: 11, 92, 171;
+  --bs-info-text-emphasis: #093f75;
+  --bs-info-bg-subtle: #d6e4f2;
+  --bs-info-border-subtle: #aecbe6;
 }
 
 body {
@@ -62,18 +105,27 @@ body {
   --bs-btn-active-border-color: var(--brand-dark);
 }
 
-/* Acessibilidade: foco de teclado sempre visível e com alto contraste */
-*:focus-visible {
-  outline: 3px solid #ffbf47;
-  outline-offset: 2px;
-  border-radius: 2px;
+/* Badges de destaque (ex.: "Dono", "Compartilhada") na cor de destaque teal */
+.text-bg-secondary {
+  color: var(--on-accent) !important;
+  background-color: var(--accent) !important;
 }
 
-/* Não remover o outline padrão quando o foco vem do teclado */
+/* Acessibilidade: foco de teclado sempre visível e com alto contraste.
+   O outline âmbar destaca-se sobre a marca; o halo índigo garante contraste
+   também sobre superfícies claras (branco/cinza). */
+*:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 5px rgba(39, 29, 148, 0.45);
+}
+
+/* Reforço do halo em elementos interativos comuns */
 .btn:focus-visible,
 .form-control:focus-visible,
 a:focus-visible {
-  box-shadow: 0 0 0 3px rgba(255, 191, 71, 0.6);
+  box-shadow: 0 0 0 5px rgba(39, 29, 148, 0.45);
 }
 
 /* Link "pular para o conteúdo" para usuários de teclado/leitor de tela */
@@ -83,7 +135,7 @@ a:focus-visible {
   top: 0;
   z-index: 1100;
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
   padding: 0.75rem 1rem;
   border-radius: 0 0 var(--radius-sm) 0;
 }

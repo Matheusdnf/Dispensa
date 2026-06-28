@@ -15,7 +15,7 @@
 .welcome {
   flex: 1 1 300px;
   background: var(--brand);
-  color: #fff;
+  color: var(--on-brand);
   padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
