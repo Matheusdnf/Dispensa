@@ -14,7 +14,7 @@
 /* Painel de boas-vindas (esquerda no wireframe) */
 .welcome {
   flex: 1 1 300px;
-  background: var(--brand);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--accent-dark) 100%);
   color: var(--on-brand);
   padding: 2.5rem 2rem;
   display: flex;

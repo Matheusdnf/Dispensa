@@ -7,7 +7,7 @@ import Link from "next/link";
 export function Navbar({ text = "Despensa Virtual", route = "/", actions = null }) {
   return (
     <nav
-      className="navbar bg-white shadow-sm"
+      className="navbar shadow-sm brandbar"
       aria-label="Navegação principal"
     >
       <div className="container-fluid d-flex align-items-center justify-content-between gap-3">
@@ -23,7 +23,7 @@ export function Navbar({ text = "Despensa Virtual", route = "/", actions = null 
             height="28"
             className="d-inline-block me-2"
           />
-          <span className="fw-semibold text-dark">{text}</span>
+          <span className="fw-semibold">{text}</span>
         </Link>
         {actions && (
           <div className="d-flex align-items-center gap-2 flex-wrap">{actions}</div>
@@ -46,7 +46,7 @@ export function Nav_bar_itens({
 }) {
   return (
     <nav
-      className="navbar bg-white shadow-sm px-3 px-md-4 py-3"
+      className="navbar shadow-sm px-3 px-md-4 py-3 brandbar"
       aria-label={name_nav_bar}
     >
       <div className="container-fluid d-flex align-items-center justify-content-between gap-3 flex-wrap">

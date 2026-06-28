@@ -2,7 +2,8 @@
   box-shadow: var(--shadow-lg);
   padding: 10px;
   text-align: center;
-  background-color: var(--surface-sunken);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--accent-dark) 100%);
+  color: var(--on-brand);
   position: relative;
   bottom: 0;
   margin-top: 16vh;

@@ -80,8 +80,51 @@
 }
 
 body {
+  /* Fundo colorido: degradê suave índigo → superfície clara (fixo ao rolar) */
+  background: linear-gradient(180deg, #e6e2fb 0%, var(--surface-muted) 55%)
+    no-repeat;
+  background-attachment: fixed;
   background-color: var(--surface-muted);
   color: var(--text);
+  min-height: 100vh;
+}
+
+/* Barra de marca: navbar/cabeçalhos com degradê índigo → teal e texto branco */
+.brandbar {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--accent-dark) 100%) !important;
+  color: var(--on-brand);
+  box-shadow: var(--shadow-md) !important;
+}
+.brandbar h1,
+.brandbar .navbar-brand span {
+  color: var(--on-brand);
+}
+
+/* Botões dentro da barra de marca: invertidos para contrastar com o degradê */
+.brandbar .btn-primary {
+  --bs-btn-bg: var(--on-brand);
+  --bs-btn-border-color: var(--on-brand);
+  --bs-btn-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand-soft);
+  --bs-btn-hover-border-color: var(--brand-soft);
+  --bs-btn-hover-color: var(--brand);
+  --bs-btn-active-bg: var(--brand-soft);
+  --bs-btn-active-color: var(--brand);
+}
+.brandbar .btn-outline-primary,
+.brandbar .btn-outline-secondary,
+.brandbar .btn-outline-danger {
+  --bs-btn-color: var(--on-brand);
+  --bs-btn-border-color: rgba(255, 255, 255, 0.75);
+  --bs-btn-hover-bg: var(--on-brand);
+  --bs-btn-hover-border-color: var(--on-brand);
+  --bs-btn-hover-color: var(--brand);
+  --bs-btn-active-bg: var(--on-brand);
+  --bs-btn-active-color: var(--brand);
+}
+.brandbar .btn-outline-danger {
+  --bs-btn-hover-color: var(--danger);
+  --bs-btn-active-color: var(--danger);
 }
 
 /* Botões na cor de marca, mantendo a API do Bootstrap */
@@ -103,6 +146,18 @@ body {
   --bs-btn-hover-border-color: var(--brand);
   --bs-btn-active-bg: var(--brand-dark);
   --bs-btn-active-border-color: var(--brand-dark);
+}
+
+/* Ações secundárias (fora da barra de marca) na cor de destaque teal */
+.btn-outline-secondary {
+  --bs-btn-color: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-hover-color: var(--on-accent);
+  --bs-btn-active-bg: var(--accent-dark);
+  --bs-btn-active-border-color: var(--accent-dark);
+  --bs-btn-active-color: var(--on-accent);
 }
 
 /* Badges de destaque (ex.: "Dono", "Compartilhada") na cor de destaque teal */
