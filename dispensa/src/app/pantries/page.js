@@ -6,6 +6,8 @@ import { LogoutButton } from "@/app/components/logoutButton";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
+import { Plus } from "lucide-react";
+
 export default function PantriesPage() {
   const [pantries, setPantries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,12 +25,16 @@ export default function PantriesPage() {
       <Nav_bar_itens
         name_nav_bar="Minhas Despensas"
         actions={
-          <>
-            <Link href="/pantries/new" className="btn btn-primary">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/pantries/new"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-indigo-900 shadow-sm transition hover:bg-indigo-50 hover:scale-[1.02] active:scale-[0.98] no-underline"
+            >
+              <Plus className="h-4 w-4" />
               Criar despensa
             </Link>
             <LogoutButton />
-          </>
+          </div>
         }
       />
 

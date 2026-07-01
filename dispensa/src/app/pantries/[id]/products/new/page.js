@@ -4,7 +4,8 @@ import { useState } from "react";
 import { createProduct } from "@/app/lib/products";
 import { useRouter, useParams } from "next/navigation";
 import { Nav_bar_itens } from "@/app/components/navbar";
-import form_style from "@/app/style/form.module.css";
+import { Save, Type, AlignLeft, Image as ImageIcon, Calendar, Hash, AlertCircle, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 
 export default function NewProductPage() {
   const { id: pantryId } = useParams();
@@ -74,142 +75,181 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <Nav_bar_itens
         name_nav_bar="Adicionar Produto"
-        backHref={`/pantries/${pantryId}/products`}
-        actions={
-          <button type="submit" form="product-form" className="btn btn-primary">
-            Salvar
-          </button>
-        }
       />
 
       <main
         id="main-content"
-        className="flex-fill d-flex justify-content-center p-3"
+        className="flex-1 flex justify-center items-start p-4 sm:p-6"
       >
         <form
           id="product-form"
           onSubmit={handleSubmit}
           noValidate
-          className={form_style.form}
+          className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mt-4"
         >
+          <div className="mb-6 text-center">
+            <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-1">Novo Produto</h2>
+            <p className="text-sm text-gray-500">Adicione um novo item à sua despensa.</p>
+          </div>
+
           {formError && (
-            <div className="alert alert-danger" role="alert">
-              {formError}
+            <div className="mb-6 flex items-center gap-2 rounded-xl bg-red-50 p-3 text-sm text-red-800 border border-red-100" role="alert">
+              <AlertCircle className="h-5 w-5 text-red-500 shrink-0" />
+              <span>{formError}</span>
             </div>
           )}
           {success && (
-            <div className="alert alert-success" role="status">
-              {success}
+            <div className="mb-6 flex items-center gap-2 rounded-xl bg-green-50 p-3 text-sm text-green-800 border border-green-100" role="status">
+              <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
+              <span>{success}</span>
             </div>
           )}
 
-          <div className="mb-3">
-            <label htmlFor="product-name" className="form-label">
-              Nome
+          <div className="mb-5">
+            <label htmlFor="product-name" className="block text-sm font-medium text-gray-700 mb-1.5">
+              Nome do produto
             </label>
-            <input
-              id="product-name"
-              type="text"
-              className="form-control"
-              value={name}
-              onChange={(e) => handleChange(e, setName)}
-              aria-invalid={nameError ? "true" : "false"}
-              aria-describedby={nameError ? "product-name-error" : undefined}
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                <Type className="h-4.5 w-4.5" />
+              </div>
+              <input
+                id="product-name"
+                type="text"
+                placeholder="Ex: Arroz Branco"
+                className={`block w-full pl-10 pr-4 py-2.5 bg-white border ${nameError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-500'} rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm transition-shadow`}
+                value={name}
+                onChange={(e) => handleChange(e, setName)}
+                aria-invalid={nameError ? "true" : "false"}
+                aria-describedby={nameError ? "product-name-error" : undefined}
+              />
+            </div>
             {nameError && (
-              <p id="product-name-error" className="text-danger small mt-1 mb-0">
+              <p id="product-name-error" className="text-red-500 text-xs mt-1.5 font-medium">
                 {nameError}
               </p>
             )}
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="product-description" className="form-label">
+          <div className="mb-5">
+            <label htmlFor="product-description" className="block text-sm font-medium text-gray-700 mb-1.5">
               Descrição
             </label>
-            <input
-              id="product-description"
-              type="text"
-              className="form-control"
-              value={description}
-              onChange={(e) => handleChange(e, setDescription)}
-              aria-invalid={descriptionError ? "true" : "false"}
-              aria-describedby={
-                descriptionError ? "product-description-error" : undefined
-              }
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 pt-3 pointer-events-none text-gray-400">
+                <AlignLeft className="h-4.5 w-4.5" />
+              </div>
+              <textarea
+                id="product-description"
+                rows="3"
+                placeholder="Ex: Pacote de 5kg..."
+                className={`block w-full pl-10 pr-4 py-2.5 bg-white border ${descriptionError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-500'} rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm transition-shadow resize-none`}
+                value={description}
+                onChange={(e) => handleChange(e, setDescription)}
+                aria-invalid={descriptionError ? "true" : "false"}
+                aria-describedby={descriptionError ? "product-description-error" : undefined}
+              />
+            </div>
             {descriptionError && (
-              <p
-                id="product-description-error"
-                className="text-danger small mt-1 mb-0"
-              >
+              <p id="product-description-error" className="text-red-500 text-xs mt-1.5 font-medium">
                 {descriptionError}
               </p>
             )}
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="product-quantity" className="form-label">
-              Quantidade
-            </label>
-            <input
-              id="product-quantity"
-              type="number"
-              min="0"
-              className="form-control"
-              value={quantity}
-              onChange={(e) => handleChange(e, setQuantity)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="product-validity" className="form-label">
-              Validade
-            </label>
-            <input
-              id="product-validity"
-              type="date"
-              className="form-control"
-              value={validate}
-              onChange={(e) => handleChange(e, setValidate)}
-              aria-invalid={validateError ? "true" : "false"}
-              aria-describedby={
-                validateError ? "product-validity-error" : undefined
-              }
-            />
-            {validateError && (
-              <p
-                id="product-validity-error"
-                className="text-danger small mt-1 mb-0"
-              >
-                {validateError}
-              </p>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="product-image" className="form-label">
-              Anexar imagem
-            </label>
-            <input
-              id="product-image"
-              type="file"
-              accept="image/*"
-              className="form-control"
-              onChange={handleFileChange}
-            />
-            {imagePreview && (
-              <div className="mt-3 text-center">
-                <img
-                  src={imagePreview}
-                  alt="Pré-visualização da imagem do produto"
-                  className={form_style.preview}
+          <div className="grid grid-cols-2 gap-4 mb-5">
+            <div>
+              <label htmlFor="product-quantity" className="block text-sm font-medium text-gray-700 mb-1.5">
+                Quantidade
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                  <Hash className="h-4.5 w-4.5" />
+                </div>
+                <input
+                  id="product-quantity"
+                  type="number"
+                  min="0"
+                  placeholder="0"
+                  className="block w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm transition-shadow"
+                  value={quantity}
+                  onChange={(e) => handleChange(e, setQuantity)}
                 />
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="product-validity" className="block text-sm font-medium text-gray-700 mb-1.5">
+                Validade
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                  <Calendar className="h-4.5 w-4.5" />
+                </div>
+                <input
+                  id="product-validity"
+                  type="date"
+                  className={`block w-full pl-10 pr-4 py-2.5 bg-white border ${validateError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-500'} rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm transition-shadow`}
+                  value={validate}
+                  onChange={(e) => handleChange(e, setValidate)}
+                  aria-invalid={validateError ? "true" : "false"}
+                  aria-describedby={validateError ? "product-validity-error" : undefined}
+                />
+              </div>
+              {validateError && (
+                <p id="product-validity-error" className="text-red-500 text-xs mt-1.5 font-medium">
+                  {validateError}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <label htmlFor="product-image" className="block text-sm font-medium text-gray-700 mb-1.5">
+              Anexar imagem (opcional)
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                <ImageIcon className="h-4.5 w-4.5" />
+              </div>
+              <input
+                id="product-image"
+                type="file"
+                accept="image/*"
+                className="block w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl text-sm text-gray-900 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer shadow-sm transition-shadow"
+                onChange={handleFileChange}
+              />
+            </div>
+            {imagePreview && (
+              <div className="mt-4 flex justify-center">
+                <div className="relative rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                  <img
+                    src={imagePreview}
+                    alt="Pré-visualização"
+                    className="h-32 w-32 object-cover"
+                  />
+                </div>
+              </div>
             )}
+          </div>
+
+          <div className="pt-4 flex items-center justify-end gap-3 border-t border-gray-100">
+            <Link
+              href={`/pantries/${pantryId}/products`}
+              className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-[0.98] no-underline"
+            >
+              Cancelar
+            </Link>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center gap-1.5 rounded-full bg-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-[0.98] cursor-pointer border-0"
+            >
+              <Save className="h-4 w-4" />
+              Adicionar Produto
+            </button>
           </div>
         </form>
       </main>

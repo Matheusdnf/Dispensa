@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import style from "@/app/style/auth.module.css";
 
+import { LogIn } from "lucide-react";
+
 export default async function Register() {
   // Usuário já logado não precisa ver a tela de registro.
   if (await getSessionUserId()) redirect("/pantries");
@@ -23,7 +25,11 @@ export default async function Register() {
               A Despensa Virtual é a melhor maneira de organizar seus alimentos.
             </p>
             <p className="mb-2">Já tem uma conta?</p>
-            <Link href="/auth/login" className="btn btn-outline-light">
+            <Link
+              href="/auth/login"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:scale-[1.02] active:scale-[0.98] no-underline"
+            >
+              <LogIn className="h-4 w-4" />
               Login
             </Link>
           </aside>

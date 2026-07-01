@@ -7,6 +7,7 @@ import { Nav_bar_itens } from "@/app/components/navbar";
 import { fetchProducts } from "@/app/lib/products";
 import { fetchPantry } from "@/app/lib/pantries";
 import { useAuth } from "@/app/lib/auth";
+import { Plus, UserPlus } from "lucide-react";
 
 export default function ProductsPage() {
   const { id } = useParams();
@@ -37,22 +38,24 @@ export default function ProductsPage() {
         backHref="/pantries"
         backLabel="Voltar para as despensas"
         actions={
-          <>
+          <div className="flex items-center gap-2">
             <Link
               href={`/pantries/${id}/products/new`}
-              className="btn btn-primary"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-indigo-900 shadow-sm transition hover:bg-indigo-50 hover:scale-[1.02] active:scale-[0.98] no-underline"
             >
+              <Plus className="h-4 w-4" />
               Adicionar produto
             </Link>
             {isOwner && (
               <Link
                 href={`/pantries/${id}/share`}
-                className="btn btn-outline-primary"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 px-3 py-1.5 text-sm font-medium text-white transition hover:scale-[1.02] active:scale-[0.98] no-underline"
               >
+                <UserPlus className="h-4 w-4" />
                 Adicionar pessoa
               </Link>
             )}
-          </>
+          </div>
         }
       />
 

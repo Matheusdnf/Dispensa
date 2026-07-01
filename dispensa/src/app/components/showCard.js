@@ -3,6 +3,7 @@ import card from "@/app/style/card.module.css";
 import Link from "next/link";
 import { Not_information } from "./not_information";
 import { Modal_function, Modal_function_pratries } from "./modal";
+import { Eye } from "lucide-react";
 
 export function ShowCard({ itens, ismodal, button_pantries }) {
   if (!itens || itens.length === 0) {
@@ -41,16 +42,17 @@ export function ShowCard({ itens, ismodal, button_pantries }) {
 
               <div className="mt-auto d-flex flex-column gap-2 pt-2">
                 {ismodal ? (
-                  <Modal_function pantryId={p.pantry_id} productId={p.id} />
+                  <Modal_function pantryId={p.pantry_id} productId={p.id} productName={p.name} />
                 ) : (
                   <Link
-                    className="btn btn-primary"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-[0.98]"
                     href={`/pantries/${p.id}/products/`}
                   >
+                    <Eye className="h-4 w-4" />
                     Ver produtos
                   </Link>
                 )}
-                {button_pantries && <Modal_function_pratries pantryId={p.id} />}
+                {button_pantries && <Modal_function_pratries pantryId={p.id} pantryName={p.name} />}
               </div>
             </div>
           </div>

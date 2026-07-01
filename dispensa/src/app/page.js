@@ -5,6 +5,8 @@ import { getSessionUserId } from "@/app/lib/session";
 import style from "@/app/style/home.module.css";
 import Link from "next/link";
 
+import { UserPlus, LogIn } from "lucide-react";
+
 const beneficios = [
   {
     titulo: "Organize seus alimentos",
@@ -28,19 +30,7 @@ export default async function Home() {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <Navbar
-        text="Despensa Virtual"
-        actions={
-          <>
-            <Link href="/auth/register" className="btn btn-outline-primary">
-              Criar conta
-            </Link>
-            <Link href="/auth/login" className="btn btn-primary">
-              Fazer login
-            </Link>
-          </>
-        }
-      />
+      <Navbar text="Despensa Virtual" />
 
       <main id="main-content" className="flex-fill">
         <section className={style.hero}>
@@ -51,11 +41,19 @@ export default async function Home() {
               controlar o que você tem em casa e compartilhar com quem você
               quiser.
             </p>
-            <div className={style.hero_actions}>
-              <Link href="/auth/register" className="btn btn-light btn-lg">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
+              <Link
+                href="/auth/register"
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-base font-semibold text-indigo-700 shadow-md transition duration-200 hover:bg-indigo-50 hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto text-center justify-center no-underline"
+              >
+                <UserPlus className="h-5 w-5" />
                 Criar conta grátis
               </Link>
-              <Link href="/auth/login" className="btn btn-outline-light btn-lg">
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-transparent px-6 py-3 text-base font-semibold text-white transition duration-200 hover:bg-white/10 hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto text-center justify-center no-underline"
+              >
+                <LogIn className="h-5 w-5" />
                 Já tenho conta
               </Link>
             </div>
