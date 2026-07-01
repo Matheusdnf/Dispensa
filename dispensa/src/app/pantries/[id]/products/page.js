@@ -16,6 +16,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [pantryName, setPantryName] = useState("Despensa");
   const [ownerId, setOwnerId] = useState(null);
+  const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function ProductsPage() {
     fetchPantry(id).then((p) => {
       if (p?.name) setPantryName(p.name);
       if (p?.user_id) setOwnerId(p.user_id);
+      if (p?.role) setRole(p.role);
     });
     fetchProducts(id)
       .then(setProducts)
@@ -44,15 +46,17 @@ export default function ProductsPage() {
             <NotificationsBell products={products} />
             
             {/* Desktop actions */}
-            <div className="hidden md:flex items-center gap-2">
-              <Link
-                href={`/pantries/${id}/products/new`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-indigo-900 shadow-sm transition hover:bg-indigo-50 hover:scale-[1.02] active:scale-[0.98] no-underline"
-              >
-                <Plus className="h-4 w-4" />
-                Adicionar produto
-              </Link>
-              {isOwner && (
+            <div className="d-none d-md-flex items-center gap-2">
+              {role !== "leitor" && (
+                <Link
+                  href={`/pantries/${id}/products/new`}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-indigo-900 shadow-sm transition hover:bg-indigo-50 hover:scale-[1.02] active:scale-[0.98] no-underline"
+                >
+                  <Plus className="h-4 w-4" />
+                  Adicionar produto
+                </Link>
+              )}
+              {role === "admin" && (
                 <Link
                   href={`/pantries/${id}/share`}
                   className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 px-3 py-1.5 text-sm font-medium text-white transition hover:scale-[1.02] active:scale-[0.98] no-underline"
@@ -64,7 +68,7 @@ export default function ProductsPage() {
             </div>
 
             {/* Mobile hamburger menu */}
-            <div className="md:hidden relative">
+            <div className="d-md-none relative">
               <button
                 type="button"
                 className="inline-flex items-center justify-center p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
@@ -76,15 +80,17 @@ export default function ProductsPage() {
 
               {isMobileMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-lg bg-white p-3 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 flex flex-col gap-3">
-                  <Link
-                    href={`/pantries/${id}/products/new`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-900 transition hover:bg-indigo-100 no-underline"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Adicionar produto
-                  </Link>
-                  {isOwner && (
+                  {role !== "leitor" && (
+                    <Link
+                      href={`/pantries/${id}/products/new`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-2 rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-900 transition hover:bg-indigo-100 no-underline"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Adicionar produto
+                    </Link>
+                  )}
+                  {role === "admin" && (
                     <Link
                       href={`/pantries/${id}/share`}
                       onClick={() => setIsMobileMenuOpen(false)}
@@ -111,7 +117,7 @@ export default function ProductsPage() {
             Erro: {error}
           </p>
         ) : (
-          <ShowCard itens={products} ismodal={true} />
+          <ShowCard itens={products} ismodal={true} role={role} />
         )}
       </main>
     </div>

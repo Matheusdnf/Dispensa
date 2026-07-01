@@ -55,6 +55,8 @@ const SCHEMA = `
     id         TEXT PRIMARY KEY,
     pantry_id  TEXT NOT NULL,
     user_id    TEXT NOT NULL,
+    status     TEXT DEFAULT 'pending',
+    role       TEXT DEFAULT 'colaborador',
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     UNIQUE (pantry_id, user_id),
     FOREIGN KEY (pantry_id) REFERENCES pantries(id) ON DELETE CASCADE,
@@ -72,6 +74,18 @@ function createConnection() {
   try {
     db.exec(`ALTER TABLE products ADD COLUMN initial_quantity INTEGER`);
     db.exec(`UPDATE products SET initial_quantity = quantity WHERE initial_quantity IS NULL`);
+  } catch (err) {
+    // Column already exists, ignore
+  }
+
+  try {
+    db.exec(`ALTER TABLE pantry_shares ADD COLUMN status TEXT DEFAULT 'accepted'`);
+  } catch (err) {
+    // Column already exists, ignore
+  }
+
+  try {
+    db.exec(`ALTER TABLE pantry_shares ADD COLUMN role TEXT DEFAULT 'colaborador'`);
   } catch (err) {
     // Column already exists, ignore
   }

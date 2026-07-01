@@ -56,15 +56,15 @@ export function Nav_bar_itens({
 }) {
   return (
     <nav
-      className="bg-[#1A188C] px-4 py-4 md:px-6 shadow-md"
+      className="bg-[#1A188C] px-3 py-3 md:px-6 md:py-4 shadow-md"
       aria-label={name_nav_bar}
     >
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+      <div className="mx-auto flex max-w-7xl flex-nowrap items-center justify-between gap-2 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-4 min-w-0">
           {backHref && (
             <Link
               href={backHref}
-              className="inline-flex items-center justify-center p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors mr-1"
+              className="inline-flex items-center justify-center p-1.5 md:p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
               aria-label={backLabel}
               title={backLabel}
             >
@@ -72,17 +72,17 @@ export function Nav_bar_itens({
             </Link>
           )}
           
-          <h1 className="text-xl font-bold tracking-tight text-white m-0">
+          <h1 className="text-lg md:text-xl font-bold tracking-tight text-white m-0 truncate">
             {name_nav_bar}
           </h1>
 
           {Dropdown && (
-            <div className="flex items-center text-white">{Dropdown}</div>
+            <div className="flex items-center text-white flex-shrink-0">{Dropdown}</div>
           )}
         </div>
 
         {actions && (
-          <div className="flex items-center gap-2 flex-wrap text-white">
+          <div className="flex items-center gap-1 md:gap-2 flex-nowrap text-white flex-shrink-0">
             {actions}
           </div>
         )}

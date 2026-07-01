@@ -18,7 +18,7 @@ export async function GET(_request, { params }) {
 
   const members = db
     .prepare(
-      `SELECT u.id, u.email, u.username
+      `SELECT u.id, u.email, u.username, s.role, s.status
          FROM pantry_shares s
          JOIN users u ON u.id = s.user_id
         WHERE s.pantry_id = ?
@@ -40,6 +40,8 @@ export async function POST(request, { params }) {
 
   const body = await request.json().catch(() => ({}));
   const email = typeof body.email === "string" ? body.email.trim() : "";
+  const role = ["colaborador", "leitor"].includes(body.role) ? body.role : "colaborador";
+  
   if (!email) {
     return NextResponse.json(
       { error: "Informe o e-mail da pessoa." },
@@ -74,8 +76,8 @@ export async function POST(request, { params }) {
   }
 
   db.prepare(
-    "INSERT INTO pantry_shares (id, pantry_id, user_id) VALUES (?, ?, ?)"
-  ).run(crypto.randomUUID(), id, user.id);
+    "INSERT INTO pantry_shares (id, pantry_id, user_id, status, role) VALUES (?, ?, ?, 'pending', ?)"
+  ).run(crypto.randomUUID(), id, user.id, role);
 
-  return NextResponse.json({ member: user }, { status: 201 });
+  return NextResponse.json({ member: { ...user, role } }, { status: 201 });
 }

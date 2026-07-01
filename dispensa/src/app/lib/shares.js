@@ -14,11 +14,11 @@ export async function fetchShares(pantryId) {
   return data;
 }
 
-export async function addShare(pantryId, email) {
+export async function addShare(pantryId, email, role) {
   const res = await fetch(`/api/pantries/${pantryId}/shares`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, role }),
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) return { error: data.error || "Erro ao adicionar pessoa." };

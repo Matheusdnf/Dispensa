@@ -5,7 +5,7 @@ import { deletePantry } from "@/app/lib/pantries";
 import { deleteProduct } from "@/app/lib/products";
 import Link from "next/link";
 import { useAuth } from "@/app/lib/auth";
-import { Settings, Pencil, Trash2 } from "lucide-react";
+import { Settings, Pencil, Trash2, UserPlus } from "lucide-react";
 
 // ==========================================
 // COMPONENTE: MODAL DE PRODUTO
@@ -250,6 +250,30 @@ export function Modal_function_pratries({
                 >
                   <Pencil className="h-3.5 w-3.5" />
                   Editar
+                </button>
+              </Link>
+            </div>
+
+            {/* Opção: Compartilhar */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                  <UserPlus className="h-5 w-5" />
+                </div>
+                <div>
+                  <h6 className="m-0 font-bold text-gray-900 text-sm">Compartilhar</h6>
+                  <p className="m-0 text-xs text-gray-500">
+                    Gerenciar pessoas que têm acesso a esta despensa
+                  </p>
+                </div>
+              </div>
+              <Link href={`/pantries/${pantryId}/share`} passHref>
+                <button
+                  onClick={handleCloseMainModal}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700 active:scale-[0.98] cursor-pointer border-0"
+                >
+                  <UserPlus className="h-3.5 w-3.5" />
+                  Pessoas
                 </button>
               </Link>
             </div>

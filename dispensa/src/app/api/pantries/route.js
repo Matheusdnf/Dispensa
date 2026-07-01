@@ -18,7 +18,7 @@ export async function GET() {
       `SELECT p.*, 0 AS shared FROM pantries p WHERE p.user_id = ?
        UNION
        SELECT p.*, 1 AS shared FROM pantries p
-         JOIN pantry_shares s ON s.pantry_id = p.id WHERE s.user_id = ?
+         JOIN pantry_shares s ON s.pantry_id = p.id WHERE s.user_id = ? AND s.status = 'accepted'
        ORDER BY created_at DESC`
     )
     .all(userId, userId);

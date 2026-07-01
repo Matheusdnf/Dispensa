@@ -9,7 +9,7 @@ export async function GET(_request, { params }) {
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
-  return NextResponse.json(result.pantry);
+  return NextResponse.json({ ...result.pantry, role: result.role });
 }
 
 export async function PUT(request, { params }) {

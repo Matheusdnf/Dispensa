@@ -23,14 +23,15 @@ export async function getPantryAccess(pantryId) {
   if (!pantry) return { error: "Despensa não encontrada.", status: 404 };
 
   if (pantry.user_id === userId) {
-    return { pantry, role: "owner", db, userId };
+    return { pantry, role: "admin", db, userId };
   }
 
   const share = db
-    .prepare("SELECT 1 FROM pantry_shares WHERE pantry_id = ? AND user_id = ?")
+    .prepare("SELECT role, status FROM pantry_shares WHERE pantry_id = ? AND user_id = ?")
     .get(pantryId, userId);
-  if (share) {
-    return { pantry, role: "member", db, userId };
+    
+  if (share && share.status === "accepted") {
+    return { pantry, role: share.role, db, userId };
   }
 
   return { error: "Acesso negado.", status: 403 };
@@ -40,7 +41,7 @@ export async function getPantryAccess(pantryId) {
 export async function getOwnedPantry(pantryId) {
   const result = await getPantryAccess(pantryId);
   if (result.error) return result;
-  if (result.role !== "owner") {
+  if (result.role !== "admin") {
     return { error: "Acesso negado.", status: 403 };
   }
   return result;

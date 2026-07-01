@@ -12,7 +12,7 @@ async function getOwnedProduct(pid) {
   const access = await getPantryAccess(product.pantry_id);
   if (access.error) return access;
 
-  return { product, db };
+  return { product, db, role: access.role };
 }
 
 export async function GET(_request, { params }) {
@@ -29,6 +29,9 @@ export async function PUT(request, { params }) {
   const result = await getOwnedProduct(pid);
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: result.status });
+  }
+  if (result.role !== "admin") {
+    return NextResponse.json({ error: "Apenas administradores podem editar produtos." }, { status: 403 });
   }
   const { product, db } = result;
 
@@ -68,6 +71,9 @@ export async function DELETE(_request, { params }) {
   const result = await getOwnedProduct(pid);
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: result.status });
+  }
+  if (result.role !== "admin") {
+    return NextResponse.json({ error: "Apenas administradores podem excluir produtos." }, { status: 403 });
   }
   const { product, db } = result;
 

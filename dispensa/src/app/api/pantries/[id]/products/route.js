@@ -25,6 +25,9 @@ export async function POST(request, { params }) {
   if (check.error) {
     return NextResponse.json({ error: check.error }, { status: check.status });
   }
+  if (check.role === "leitor") {
+    return NextResponse.json({ error: "Apenas administradores e colaboradores podem adicionar produtos." }, { status: 403 });
+  }
   const { db } = check;
 
   const form = await request.formData();
