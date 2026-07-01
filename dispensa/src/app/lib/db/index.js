@@ -43,6 +43,7 @@ const SCHEMA = `
     name        TEXT NOT NULL,
     description TEXT,
     quantity    INTEGER,
+    initial_quantity INTEGER,
     pantry_id   TEXT NOT NULL,
     expiration  TEXT,
     image       TEXT,
@@ -67,6 +68,14 @@ function createConnection() {
   }
   const db = new DatabaseSync(DB_PATH);
   db.exec(SCHEMA);
+
+  try {
+    db.exec(`ALTER TABLE products ADD COLUMN initial_quantity INTEGER`);
+    db.exec(`UPDATE products SET initial_quantity = quantity WHERE initial_quantity IS NULL`);
+  } catch (err) {
+    // Column already exists, ignore
+  }
+
   return db;
 }
 

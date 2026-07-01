@@ -44,12 +44,13 @@ export async function POST(request, { params }) {
   const productId = crypto.randomUUID();
 
   db.prepare(
-    `INSERT INTO products (id, name, description, quantity, pantry_id, expiration, image)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO products (id, name, description, quantity, initial_quantity, pantry_id, expiration, image)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     productId,
     name,
     description ?? null,
+    quantity ? Number(quantity) : null,
     quantity ? Number(quantity) : null,
     id,
     expiration || null,

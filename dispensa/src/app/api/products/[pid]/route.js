@@ -52,10 +52,12 @@ export async function PUT(request, { params }) {
     image = newImage;
   }
 
+  const newInitialQty = quantity > (product.initial_quantity || 0) ? quantity : product.initial_quantity;
+
   db.prepare(
-    `UPDATE products SET name = ?, description = ?, quantity = ?, expiration = ?, image = ?
+    `UPDATE products SET name = ?, description = ?, quantity = ?, initial_quantity = ?, expiration = ?, image = ?
      WHERE id = ?`
-  ).run(name, description, quantity, expiration, image, pid);
+  ).run(name, description, quantity, newInitialQty, expiration, image, pid);
 
   const updated = db.prepare("SELECT * FROM products WHERE id = ?").get(pid);
   return NextResponse.json(updated);
