@@ -4,7 +4,16 @@ import { useParams } from "next/navigation";
 import { Nav_bar_itens } from "@/app/components/navbar";
 import { fetchShares, addShare, removeShare } from "@/app/lib/shares";
 import { validateEmail } from "@/app/lib/validations";
-import { UserPlus, UserMinus, Users, Shield, User, Mail, AlertCircle, CheckCircle2 } from "lucide-react";
+import {
+  UserPlus,
+  UserMinus,
+  Users,
+  Shield,
+  User,
+  Mail,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 import Link from "next/link";
 
 export default function SharePantryPage() {
@@ -70,9 +79,7 @@ export default function SharePantryPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Nav_bar_itens
-        name_nav_bar="Compartilhar despensa"
-      />
+      <Nav_bar_itens name_nav_bar="Compartilhar despensa" />
 
       <main
         id="main-content"
@@ -84,9 +91,14 @@ export default function SharePantryPage() {
             <span className="sr-only">Carregando…</span>
           </div>
         ) : denied ? (
-          <div className="w-full max-w-lg mt-4 flex items-center gap-2 rounded-xl bg-red-50 p-4 text-sm text-red-800 border border-red-100" role="alert">
+          <div
+            className="w-full max-w-lg mt-4 flex items-center gap-2 rounded-xl bg-red-50 p-4 text-sm text-red-800 border border-red-100"
+            role="alert"
+          >
             <AlertCircle className="h-5 w-5 text-red-500 shrink-0" />
-            <span>Você não tem permissão para gerenciar as pessoas desta despensa.</span>
+            <span>
+              Você não tem permissão para gerenciar as pessoas desta despensa.
+            </span>
           </div>
         ) : (
           <div className="w-full max-w-lg bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mt-4">
@@ -94,25 +106,37 @@ export default function SharePantryPage() {
               <div className="inline-flex items-center justify-center p-3 bg-indigo-50 rounded-full mb-3">
                 <Users className="h-6 w-6 text-indigo-600" />
               </div>
-              <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-1">Compartilhamento</h2>
-              <p className="text-sm text-gray-500">Gerencie quem tem acesso a esta despensa.</p>
+              <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-1">
+                Compartilhamento
+              </h2>
+              <p className="text-sm text-gray-500">
+                Gerencie quem tem acesso a esta despensa.
+              </p>
             </div>
 
             {formError && (
-              <div className="mb-6 flex items-center gap-2 rounded-xl bg-red-50 p-3 text-sm text-red-800 border border-red-100" role="alert">
+              <div
+                className="mb-6 flex items-center gap-2 rounded-xl bg-red-50 p-3 text-sm text-red-800 border border-red-100"
+                role="alert"
+              >
                 <AlertCircle className="h-5 w-5 text-red-500 shrink-0" />
                 <span>{formError}</span>
               </div>
             )}
             {success && (
-              <div className="mb-6 flex items-center gap-2 rounded-xl bg-green-50 p-3 text-sm text-green-800 border border-green-100" role="status">
+              <div
+                className="mb-6 flex items-center gap-2 rounded-xl bg-green-50 p-3 text-sm text-green-800 border border-green-100"
+                role="status"
+              >
                 <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
                 <span>{success}</span>
               </div>
             )}
 
             <div className="mb-8">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3 border-b border-gray-100 pb-2">Pessoas com acesso</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-3 border-b border-gray-100 pb-2">
+                Pessoas com acesso
+              </h3>
               <ul className="space-y-3">
                 {owner && (
                   <li className="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-100">
@@ -121,8 +145,12 @@ export default function SharePantryPage() {
                         <User className="h-4 w-4" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-900">{owner.username}</span>
-                        <span className="text-xs text-gray-500">{owner.email}</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {owner.username}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {owner.email}
+                        </span>
                       </div>
                     </div>
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
@@ -131,24 +159,31 @@ export default function SharePantryPage() {
                     </span>
                   </li>
                 )}
-                
+
                 {members.map((m) => (
-                  <li key={m.id} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <li
+                    key={m.id}
+                    className="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors"
+                  >
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-gray-100 text-gray-600 rounded-full">
                         <User className="h-4 w-4" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-900">{m.username}</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {m.username}
+                        </span>
                         <span className="text-xs text-gray-500">{m.email}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${m.role === 'leitor' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'}`}>
-                        {m.role === 'leitor' ? 'Leitor' : 'Colaborador'}
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${m.role === "leitor" ? "bg-blue-50 text-blue-700" : "bg-emerald-50 text-emerald-700"}`}
+                      >
+                        {m.role === "leitor" ? "Leitor" : "Colaborador"}
                       </span>
                       <span className="text-xs text-gray-400 font-medium">
-                        {m.status === 'pending' ? '(Pendente)' : ''}
+                        {m.status === "pending" ? "(Pendente)" : ""}
                       </span>
                       <button
                         type="button"
@@ -157,12 +192,11 @@ export default function SharePantryPage() {
                         aria-label={`Remover ${m.email}`}
                       >
                         <UserMinus className="h-3.5 w-3.5" />
-                        Remover
                       </button>
                     </div>
                   </li>
                 ))}
-                
+
                 {members.length === 0 && (
                   <li className="p-4 text-center text-sm text-gray-500 border border-dashed border-gray-200 rounded-xl bg-gray-50/50">
                     Nenhuma outra pessoa tem acesso.
@@ -172,9 +206,14 @@ export default function SharePantryPage() {
             </div>
 
             <form onSubmit={handleSubmit} noValidate>
-              <h3 className="text-sm font-semibold text-gray-900 mb-3 border-b border-gray-100 pb-2">Convidar pessoa</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-3 border-b border-gray-100 pb-2">
+                Convidar pessoa
+              </h3>
               <div className="mb-4">
-                <label htmlFor="share-email" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label
+                  htmlFor="share-email"
+                  className="block text-sm font-medium text-gray-700 mb-1.5"
+                >
                   E-mail do convidado
                 </label>
                 <div className="relative">
@@ -185,22 +224,30 @@ export default function SharePantryPage() {
                     id="share-email"
                     type="email"
                     placeholder="amigo@email.com"
-                    className={`block w-full pl-10 pr-4 py-2.5 bg-white border ${emailError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-200 focus:border-indigo-500 focus:ring-indigo-500'} rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm transition-shadow`}
+                    className={`block w-full pl-10 pr-4 py-2.5 bg-white border ${emailError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-indigo-500 focus:ring-indigo-500"} rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 shadow-sm transition-shadow`}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     aria-invalid={emailError ? "true" : "false"}
-                    aria-describedby={emailError ? "share-email-error" : undefined}
+                    aria-describedby={
+                      emailError ? "share-email-error" : undefined
+                    }
                   />
                 </div>
                 {emailError && (
-                  <p id="share-email-error" className="text-red-500 text-xs mt-1.5 font-medium">
+                  <p
+                    id="share-email-error"
+                    className="text-red-500 text-xs mt-1.5 font-medium"
+                  >
                     {emailError}
                   </p>
                 )}
               </div>
 
               <div className="mb-4">
-                <label htmlFor="share-role" className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label
+                  htmlFor="share-role"
+                  className="block text-sm font-medium text-gray-700 mb-1.5"
+                >
                   Permissão
                 </label>
                 <select
@@ -209,11 +256,13 @@ export default function SharePantryPage() {
                   onChange={(e) => setRole(e.target.value)}
                   className="block w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition-shadow"
                 >
-                  <option value="colaborador">Colaborador (Pode visualizar e adicionar produtos)</option>
+                  <option value="colaborador">
+                    Colaborador (Pode visualizar e adicionar produtos)
+                  </option>
                   <option value="leitor">Leitor (Apenas visualização)</option>
                 </select>
               </div>
-              
+
               <div className="flex items-center justify-end gap-3 pt-2">
                 <Link
                   href={`/pantries/${id}/products`}
