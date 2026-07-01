@@ -7,8 +7,9 @@ import { Nav_bar_itens } from "@/app/components/navbar";
 import { fetchProducts } from "@/app/lib/products";
 import { fetchPantry } from "@/app/lib/pantries";
 import { useAuth } from "@/app/lib/auth";
-import { Plus, UserPlus, Menu, X } from "lucide-react";
+import { Plus, UserPlus, Menu, X, ClipboardList } from "lucide-react";
 import { NotificationsBell } from "@/app/components/NotificationsBell";
+import { ReportModal } from "@/app/components/ReportModal";
 
 export default function ProductsPage() {
   const { id } = useParams();
@@ -43,6 +44,7 @@ export default function ProductsPage() {
         backLabel="Voltar para as despensas"
         actions={
           <div className="flex items-center gap-2">
+            <ReportModal products={products} pantryName={pantryName} />
             <NotificationsBell products={products} />
             
             {/* Desktop actions */}

@@ -47,8 +47,10 @@ const SCHEMA = `
     pantry_id   TEXT NOT NULL,
     expiration  TEXT,
     image       TEXT,
+    added_by    TEXT,
     created_at  TEXT NOT NULL DEFAULT (datetime('now')),
-    FOREIGN KEY (pantry_id) REFERENCES pantries(id) ON DELETE CASCADE
+    FOREIGN KEY (pantry_id) REFERENCES pantries(id) ON DELETE CASCADE,
+    FOREIGN KEY (added_by) REFERENCES users(id) ON DELETE SET NULL
   );
 
   CREATE TABLE IF NOT EXISTS pantry_shares (
@@ -80,6 +82,12 @@ function createConnection() {
 
   try {
     db.exec(`ALTER TABLE pantry_shares ADD COLUMN status TEXT DEFAULT 'accepted'`);
+  } catch (err) {
+    // Column already exists, ignore
+  }
+
+  try {
+    db.exec(`ALTER TABLE products ADD COLUMN added_by TEXT`);
   } catch (err) {
     // Column already exists, ignore
   }

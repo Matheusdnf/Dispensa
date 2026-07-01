@@ -13,7 +13,15 @@ export async function GET(_request, { params }) {
   const { db } = check;
 
   const products = db
-    .prepare("SELECT * FROM products WHERE pantry_id = ? ORDER BY created_at DESC")
+    .prepare(`
+      SELECT p.*, COALESCE(u.username, owner.username) as added_by_username 
+      FROM products p 
+      LEFT JOIN users u ON p.added_by = u.id 
+      JOIN pantries pan ON p.pantry_id = pan.id
+      JOIN users owner ON pan.user_id = owner.id
+      WHERE p.pantry_id = ? 
+      ORDER BY p.created_at DESC
+    `)
     .all(id);
   return NextResponse.json(products);
 }
@@ -28,7 +36,7 @@ export async function POST(request, { params }) {
   if (check.role === "leitor") {
     return NextResponse.json({ error: "Apenas administradores e colaboradores podem adicionar produtos." }, { status: 403 });
   }
-  const { db } = check;
+  const { db, userId } = check;
 
   const form = await request.formData();
   const name = form.get("name");
@@ -47,8 +55,8 @@ export async function POST(request, { params }) {
   const productId = crypto.randomUUID();
 
   db.prepare(
-    `INSERT INTO products (id, name, description, quantity, initial_quantity, pantry_id, expiration, image)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO products (id, name, description, quantity, initial_quantity, pantry_id, expiration, image, added_by)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     productId,
     name,
@@ -57,7 +65,8 @@ export async function POST(request, { params }) {
     quantity ? Number(quantity) : null,
     id,
     expiration || null,
-    image
+    image,
+    userId
   );
 
   const product = db.prepare("SELECT * FROM products WHERE id = ?").get(productId);

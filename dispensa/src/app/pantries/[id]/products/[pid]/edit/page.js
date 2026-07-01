@@ -25,15 +25,15 @@ export default function EditProductPage() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    fetchProduct(pantryId, productId).then((data) => {
+    fetchProduct(productId).then((data) => {
       if (data) {
         setName(data.name ?? "");
         setDescription(data.description ?? "");
         setQuantity(data.quantity ?? "");
-        setValidate(data.validate ?? "");
+        setValidate(data.expiration ?? "");
       }
     });
-  }, [pantryId, productId]);
+  }, [productId]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -73,9 +73,8 @@ export default function EditProductPage() {
       productId,
       name,
       description,
-      image,
       quantity,
-      pantryId,
+      image,
       validate
     );
     if (response.error) {
