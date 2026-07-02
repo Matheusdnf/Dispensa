@@ -42,7 +42,7 @@ export function ShowCard({ itens, ismodal, button_pantries, role }) {
 
               <div className="mt-auto d-flex flex-column gap-2 pt-2">
                 {ismodal ? (
-                  role === "admin" && (
+                  role !== "leitor" && (
                     <Modal_function pantryId={p.pantry_id} productId={p.id} productName={p.name} />
                   )
                 ) : (

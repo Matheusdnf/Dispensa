@@ -35,3 +35,16 @@ export async function removeShare(pantryId, userId) {
   }
   return { success: true };
 }
+
+export async function updateShareRole(pantryId, userId, role) {
+  const res = await fetch(`/api/pantries/${pantryId}/shares/${userId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ role }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    return { error: data.error || "Erro ao atualizar permissão." };
+  }
+  return { success: true };
+}

@@ -30,8 +30,8 @@ export async function PUT(request, { params }) {
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
-  if (result.role !== "admin") {
-    return NextResponse.json({ error: "Apenas administradores podem editar produtos." }, { status: 403 });
+  if (result.role === "leitor") {
+    return NextResponse.json({ error: "Apenas administradores e colaboradores podem editar produtos." }, { status: 403 });
   }
   const { product, db } = result;
 
@@ -72,8 +72,8 @@ export async function DELETE(_request, { params }) {
   if (result.error) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
-  if (result.role !== "admin") {
-    return NextResponse.json({ error: "Apenas administradores podem excluir produtos." }, { status: 403 });
+  if (result.role === "leitor") {
+    return NextResponse.json({ error: "Apenas administradores e colaboradores podem excluir produtos." }, { status: 403 });
   }
   const { product, db } = result;
 
